@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# window.py
+# app.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,22 +26,25 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Wrapper for GtkWindow """
+""" The primary entry point to the library. """
 
-# 3rd-Party Libs
-import gi
-gi.require_version('Gtk', '3.0')
-
-from gi.repository import Gtk
-
-# This Library
-from whither.base.object import WhitherBaseObject
+try:
+    from .toolkits.qt.window import QtWindow as Window
+    from .toolkits.qt.app import QtApp as Application
+except ImportError:
+    from .toolkits.gtk.window import GtkWindow as Window
+    from .toolkits.gtk.app import GtkApp as Application
 
 
-class WhitherWindow(WhitherBaseObject):
+class App(Application):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-        self.widget = Gtk.Window()
+        self._main_window = Window()
 
+        self._main_window.show()
+
+
+if __name__ == '__main__':
+    raise RuntimeError('This is a library (it must be imported!)')

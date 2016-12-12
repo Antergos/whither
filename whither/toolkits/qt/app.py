@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# window.py
+# app.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -29,16 +29,19 @@
 """ Wrapper for QMainWindow """
 
 # 3rd-Party Libs
-from PyQt5.QtWidgets import QMainWindow, QAction
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 
 # This Library
-from whither.base.object import WhitherBaseObject
+from whither.base.app import Application
 
 
-class WhitherWindow(WhitherBaseObject):
+class QtApp(Application):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-        self.widget = QMainWindow()
+        self.widget = QApplication([])
+
+    def run(self) -> None:
+        self.widget.exec_()

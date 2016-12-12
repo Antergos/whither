@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# object.py
+# window.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,15 +26,23 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Whither Base Object """
+""" Wrapper for QMainWindow """
 
-from typing import Any
+# 3rd-Party Libs
+from PyQt5.QtWidgets import QMainWindow, QAction
+from PyQt5.QtCore import Qt
+
+# This Library
+from whither.base.window import Window
 
 
-class BaseObject:
-    _app = None            # type: 'App'
-    _main_window = None    # type: 'Window'
-    _web_container = None  # type: 'WebContainer'
+class QtWindow(Window):
 
     def __init__(self) -> None:
-        self.widget = None  # type: Any
+        super().__init__()
+
+        self._main_window = self
+        self.widget = QMainWindow()
+
+    def show(self) -> None:
+        self.widget.show()

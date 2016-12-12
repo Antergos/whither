@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# object.py
+# window.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,15 +26,25 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Whither Base Object """
+""" Wrapper for GtkWindow """
 
-from typing import Any
+# Standard Lib
+from enum import Enum
+
+# This Library
+from .object import BaseObject
 
 
-class BaseObject:
-    _app = None            # type: 'App'
-    _main_window = None    # type: 'Window'
-    _web_container = None  # type: 'WebContainer'
+class Window(BaseObject):
+
+    state = Enum('maximized', 'fullscreen')
 
     def __init__(self) -> None:
-        self.widget = None  # type: Any
+        super().__init__()
+
+        self._main_window = self
+
+    def show(self) -> None:
+        raise NotImplementedError()
+
+
