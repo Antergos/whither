@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# app.py
+# bootstrap.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,19 +26,13 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
+""" Bootstraps the application using either Qt (preferred) or Gtk. """
 
-# This Library
-from .object import BaseObject
-
-
-class Application(BaseObject):
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self._app = self
-
-    def run(self) -> None:
-        raise NotImplementedError()
+try:
+    from .qt.window import QtWindow as Window
+    from .qt.application import QtApplication as Application
+except ImportError:
+    from .gtk.window import GtkWindow as Window
+    from .gtk.application import GtkApplication as Application
 
 

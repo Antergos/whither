@@ -28,17 +28,12 @@
 
 """ The primary entry point to the library. """
 
-try:
-    from .toolkits.qt.window import QtWindow as Window
-    from .toolkits.qt.app import QtApp as Application
-except ImportError:
-    from .toolkits.gtk.window import GtkWindow as Window
-    from .toolkits.gtk.app import GtkApp as Application
+
 
 
 class App(Application):
 
-    def __init__(self) -> None:
+    def __init__(self, ) -> None:
         super().__init__()
 
         self._main_window = Window()
@@ -47,4 +42,4 @@ class App(Application):
 
 
 if __name__ == '__main__':
-    raise RuntimeError('This is a library (it must be imported!)')
+    raise RuntimeError('Whither is a library (this module must be imported!)')

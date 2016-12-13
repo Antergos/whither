@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# object.py
+# application.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,22 +26,19 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Whither Base Object """
 
-from typing import Type
+# This Library
+from .object import BaseObject
 
 
-class BaseObject:
-    _app = None            # type: Type['Application']
-    _main_window = None    # type: Type['Window']
-    _web_container = None  # type: Type['WebContainer']
-    _config = None         # type: Type['Config']
+class Application(BaseObject):
 
     def __init__(self) -> None:
-        self.widget = None  # type: object
+        super().__init__()
 
-        self.is_gtk, self.is_qt = self.__determine_toolkit_in_use()
+        self._app = self
 
-    def __determine_toolkit_in_use(self) -> (bool, bool):
-        name = self.__class__.__name__
-        return 'Gtk' in name, 'Qt' in name
+    def run(self) -> None:
+        raise NotImplementedError()
+
+

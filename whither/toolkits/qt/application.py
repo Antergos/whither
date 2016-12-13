@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# app.py
+# application.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -33,10 +33,10 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 
 # This Library
-from whither.base.app import Application
+from whither.base.application import Application
 
 
-class QtApp(Application):
+class QtApplication(Application):
 
     def __init__(self) -> None:
         super().__init__()
