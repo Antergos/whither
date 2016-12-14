@@ -38,7 +38,7 @@ class Application(BaseObject):
 
         self._app = self
 
-    def run(self) -> None:
+    def run(self) -> int:
         raise NotImplementedError()
 
 

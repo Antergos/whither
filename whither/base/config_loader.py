@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# window.py
+# config.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,25 +26,38 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Base class for Window classes """
-
 # Standard Lib
-from enum import Enum
+import os
 
-# This Library
+# 3rd Party Libs
+import ruamel.yaml as yaml
+
+# This Lib
 from .object import BaseObject
 
 
-class Window(BaseObject):
+class ConfigLoader(BaseObject):
+    config_path = '/etc/whither.yml'  # type: str
+    config_path_fallback = ''         # type: str
+    config = {}                       # type: dict
 
-    state = Enum('maximized', 'fullscreen')
-
-    def __init__(self) -> None:
+    def __init__(self, config_file_path=''):
         super().__init__()
 
-        self._main_window = self
+        if config_file_path:
+            self.config_path = config_file_path
 
-    def show(self) -> None:
-        raise NotImplementedError()
+        self.load_config()
 
+    def load_config(self):
+        config_paths = [self.config_path, self.config_path_fallback]
+        config_files = [p for p in config_paths if p and os.path.exists(p)]
 
+        if not any(config_files):
+            self._logger.error('Config file not found (load_config() failed!)')
+            return
+
+        data = open(config_files[0], 'r').read()
+        config = yaml.safe_load(data)
+
+        self.config = {key: value for key, value in config.items()}

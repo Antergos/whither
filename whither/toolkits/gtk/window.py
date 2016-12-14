@@ -43,7 +43,6 @@ class GtkWindow(Window):
     def __init__(self) -> None:
         super().__init__()
 
-        self._main_window = self
         self.widget = Gtk.Window()
 
     def show(self) -> None:

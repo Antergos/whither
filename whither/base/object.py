@@ -36,12 +36,23 @@ class BaseObject:
     _main_window = None    # type: Type['Window']
     _web_container = None  # type: Type['WebContainer']
     _config = None         # type: Type['Config']
+    _logger = None         # type: Type['Logger']
+
+    is_gtk = None          # type: bool
+    is_qt = None           # type: bool
 
     def __init__(self) -> None:
         self.widget = None  # type: object
 
-        self.is_gtk, self.is_qt = self.__determine_toolkit_in_use()
+        if self.is_gtk is None:
+            self.__maybe_determine_toolkit_in_use()
 
-    def __determine_toolkit_in_use(self) -> (bool, bool):
-        name = self.__class__.__name__
-        return 'Gtk' in name, 'Qt' in name
+    def __maybe_determine_toolkit_in_use(self) -> None:
+        name = self.widget.__class__.__name__
+
+        if self.is_gtk is not None:
+            return
+        elif 'Gtk' not in name and 'Qt' not in name:
+            return
+
+        self.is_gtk, self.is_qt = 'Gtk' in name, 'Qt' in name

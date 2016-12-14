@@ -41,7 +41,6 @@ class QtWindow(Window):
     def __init__(self) -> None:
         super().__init__()
 
-        self._main_window = self
         self.widget = QMainWindow()
 
     def show(self) -> None:

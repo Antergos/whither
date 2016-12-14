@@ -43,5 +43,5 @@ class QtApplication(Application):
 
         self.widget = QApplication([])
 
-    def run(self) -> None:
-        self.widget.exec_()
+    def run(self) -> int:
+        return self.widget.exec_()

@@ -29,10 +29,12 @@
 """ Wrapper for Gtk.Application """
 
 # 3rd-Party Libs
-
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
 
 # This Library
-from whither.base.app import Application
+from whither.base.application import Application
 
 
 class GtkApplication(Application):
@@ -40,7 +42,7 @@ class GtkApplication(Application):
     def __init__(self) -> None:
         super().__init__()
 
-        self.widget = None
+        self.widget = Gtk.Application()
 
-    def run(self) -> None:
-        pass
+    def run(self) -> int:
+        return self.widget.run(None)

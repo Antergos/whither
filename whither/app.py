@@ -28,15 +28,18 @@
 
 """ The primary entry point to the library. """
 
-
+# This Library
+from .toolkits.bootstrap import Application, Window
+from .base.config_loader import ConfigLoader
 
 
 class App(Application):
 
-    def __init__(self, ) -> None:
+    def __init__(self, config_file_path='') -> None:
         super().__init__()
 
-        self._main_window = Window()
+        ConfigLoader(config_file_path)
+        Window()
 
         self._main_window.show()
 
