@@ -34,9 +34,7 @@ from .object import BaseObject
 class Application(BaseObject):
 
     def __init__(self) -> None:
-        super().__init__()
-
-        self._app = self
+        super().__init__(name='app')
 
     def run(self) -> int:
         raise NotImplementedError()

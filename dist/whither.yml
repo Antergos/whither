@@ -1,0 +1,20 @@
+# Whither (Universal Linux Apps) Configuration
+# The top-level keys in this file should be application names. This makes it possible to
+# install multiple Whither-based apps on a single system, each with their own configuration.
+
+# App Name
+Cnchi:
+    # Whither's Config
+    whither:
+        app_id: com.antergos.cnchi
+        toolkit: auto # auto|qt|gtk
+        window:
+            width: 1120
+            height: 720
+            initial_state: normal # normal|maximized|minimized|fullscreen
+            decorated: False
+            title: Cnchi Installer
+            icon: /usr/share/cnchi/data/icons/48x48/cnchi.png
+
+    # App's Config
+    app:

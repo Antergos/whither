@@ -40,9 +40,7 @@ class Window(BaseObject):
     state = Enum('maximized', 'fullscreen')
 
     def __init__(self) -> None:
-        super().__init__()
-
-        self._main_window = self
+        super().__init__(name='main_window')
 
     def show(self) -> None:
         raise NotImplementedError()

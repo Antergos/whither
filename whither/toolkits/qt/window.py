@@ -31,6 +31,7 @@
 # 3rd-Party Libs
 from PyQt5.QtWidgets import QMainWindow, QAction
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 
 # This Library
 from whither.base.window import Window
@@ -42,6 +43,22 @@ class QtWindow(Window):
         super().__init__()
 
         self.widget = QMainWindow()
+
+        self._initialize()
+
+    def _initialize(self) -> None:
+        config = self._config.whither.window
+
+        self.widget.setAttribute(Qt.WA_DeleteOnClose)
+        self.widget.setWindowTitle(config.title)
+        self.widget.setWindowIcon(QIcon(config.icon))
+        self.widget.setFixedSize(config.width, config.height)
+
+        if config.decorated:
+            self.init_menu_bar()
+
+    def init_menu_bar(self) -> None:
+        pass
 
     def show(self) -> None:
         self.widget.show()

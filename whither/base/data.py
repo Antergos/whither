@@ -40,7 +40,10 @@ class AttributeDict(dict):
 
     """
     def __init__(self, seq=None, **kwargs):
-        super().__init__(seq=seq, **kwargs)
+        if seq is not None:
+            seq = self._process_dict(seq)
+
+        super().__init__(seq, **kwargs)
 
         self['_lock'] = RLock()
 
@@ -58,8 +61,18 @@ class AttributeDict(dict):
             self[attr] = value
 
     def __setitem__(self, item, value):
+        if '_lock' == item:
+            return super().__setitem__(item, value)
+
         with self._lock:
             self[item] = value
+
+    def _process_dict(self, from_dict):
+        for key, value in from_dict.items():
+            if isinstance(value, dict):
+                from_dict[key] = AttributeDict(value)
+
+        return from_dict
 
 
 class SharedData:
@@ -87,8 +100,8 @@ class SharedData:
         return val
 
     def __set__(self, instance, value):
-        if self.name in self._data or self._data[self.name] is not None:
-            raise AttributeError('SharedData attributes can only be assigned once!')
+        if isinstance(value, dict) and not isinstance(value, AttributeDict):
+            value = AttributeDict(value)
 
         self._data[self.name] = value
 

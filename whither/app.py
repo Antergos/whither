@@ -35,10 +35,11 @@ from .base.config_loader import ConfigLoader
 
 class App(Application):
 
-    def __init__(self, config_file_path='') -> None:
+    def __init__(self, app_name, config_file_path='') -> None:
         super().__init__()
 
-        ConfigLoader(config_file_path)
+        ConfigLoader(app_name, config_file_path)
+
         Window()
 
         self._main_window.show()

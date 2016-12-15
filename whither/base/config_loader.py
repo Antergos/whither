@@ -35,21 +35,25 @@ import ruamel.yaml as yaml
 # This Lib
 from .object import BaseObject
 
+CONFIG_FB = '/home/dustin/github/antergos/cnchi/cnchi/ui/dev/whither/dist/whither.yml'
+
 
 class ConfigLoader(BaseObject):
     config_path = '/etc/whither.yml'  # type: str
-    config_path_fallback = ''         # type: str
+    config_path_fallback = CONFIG_FB  # type: str
     config = {}                       # type: dict
 
-    def __init__(self, config_file_path=''):
-        super().__init__()
+    def __init__(self, app_name, config_file_path='') -> None:
+        super().__init__(name='config_loader')
 
         if config_file_path:
             self.config_path = config_file_path
 
-        self.load_config()
+        self.load_config(app_name)
 
-    def load_config(self):
+        self._config = self.config
+
+    def load_config(self, app_name) -> None:
         config_paths = [self.config_path, self.config_path_fallback]
         config_files = [p for p in config_paths if p and os.path.exists(p)]
 
@@ -59,5 +63,6 @@ class ConfigLoader(BaseObject):
 
         data = open(config_files[0], 'r').read()
         config = yaml.safe_load(data)
+        config = config[app_name]
 
         self.config = {key: value for key, value in config.items()}

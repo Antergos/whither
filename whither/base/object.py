@@ -28,24 +28,43 @@
 
 """ Whither Base Object """
 
+# Standard Lib
 from typing import Type
+
+# This Lib
+from .data import SharedData
 
 
 class BaseObject:
-    _app = None            # type: Type['Application']
-    _main_window = None    # type: Type['Window']
-    _web_container = None  # type: Type['WebContainer']
-    _config = None         # type: Type['Config']
-    _logger = None         # type: Type['Logger']
+    _app = SharedData('_app')
+    _config = SharedData('_config')
+    _logger = SharedData('_logger')
+    _main_window = SharedData('_main_window')
+    _web_container = SharedData('_web_container')
 
     is_gtk = None          # type: bool
     is_qt = None           # type: bool
 
-    def __init__(self) -> None:
+    def __init__(self, name='base_object') -> None:
         self.widget = None  # type: object
+        self.name = name
 
         if self.is_gtk is None:
             self.__maybe_determine_toolkit_in_use()
+
+        self.__check_for_main_components(name)
+
+    def __check_for_main_components(self, name):
+        components = ['main_window', 'app', 'web_container', 'config']
+
+        if name not in components:
+            return
+
+        attrib_name = '_{}'.format(name)
+        attrib = getattr(self, attrib_name)
+
+        if attrib is None:
+            setattr(self, attrib_name, self)
 
     def __maybe_determine_toolkit_in_use(self) -> None:
         name = self.widget.__class__.__name__
