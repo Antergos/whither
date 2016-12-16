@@ -42,6 +42,7 @@ class QtApplication(Application):
         super().__init__()
 
         self.widget = QApplication([])
+        self.is_qt, self.is_gtk = True, False
 
     def run(self) -> int:
         return self.widget.exec_()

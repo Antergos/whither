@@ -49,12 +49,9 @@ class BaseObject:
         self.widget = None  # type: object
         self.name = name
 
-        if self.is_gtk is None:
-            self.__maybe_determine_toolkit_in_use()
+        self.__register_main_components(name)
 
-        self.__check_for_main_components(name)
-
-    def __check_for_main_components(self, name):
+    def __register_main_components(self, name):
         components = ['main_window', 'app', 'web_container', 'config']
 
         if name not in components:
@@ -65,13 +62,3 @@ class BaseObject:
 
         if attrib is None:
             setattr(self, attrib_name, self)
-
-    def __maybe_determine_toolkit_in_use(self) -> None:
-        name = self.widget.__class__.__name__
-
-        if self.is_gtk is not None:
-            return
-        elif 'Gtk' not in name and 'Qt' not in name:
-            return
-
-        self.is_gtk, self.is_qt = 'Gtk' in name, 'Qt' in name

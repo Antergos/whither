@@ -43,6 +43,7 @@ class GtkApplication(Application):
         super().__init__()
 
         self.widget = Gtk.Application()
+        self.is_qt, self.is_gtk = False, True
 
     def run(self) -> int:
         return self.widget.run(None)

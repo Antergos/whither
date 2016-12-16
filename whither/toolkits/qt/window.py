@@ -28,6 +28,9 @@
 
 """ Wrapper for QMainWindow """
 
+# Standard Lib
+from enum import Enum
+
 # 3rd-Party Libs
 from PyQt5.QtWidgets import QMainWindow, QAction
 from PyQt5.QtCore import Qt
@@ -37,7 +40,16 @@ from PyQt5.QtGui import QIcon
 from whither.base.window import Window
 
 
+class WindowState(Enum):
+    NORMAL = Qt.WindowNoState
+    MINIMIZED = Qt.WindowMinimized
+    MAXIMIZED = Qt.WindowMaximized
+    FULLSCREEN = Qt.WindowFullScreen
+
+
 class QtWindow(Window):
+
+    states = WindowState
 
     def __init__(self) -> None:
         super().__init__()
@@ -48,17 +60,24 @@ class QtWindow(Window):
 
     def _initialize(self) -> None:
         config = self._config.whither.window
+        toolbar_config = self._config.whither.toolbar
+        state = config.initial_state.upper()
 
         self.widget.setAttribute(Qt.WA_DeleteOnClose)
         self.widget.setWindowTitle(config.title)
         self.widget.setWindowIcon(QIcon(config.icon))
         self.widget.setFixedSize(config.width, config.height)
 
-        if config.decorated:
-            self.init_menu_bar()
+        self.set_state(self.states[state])
 
-    def init_menu_bar(self) -> None:
+        if config.decorated and toolbar_config.enabled:
+            self.init_toolbar()
+
+    def init_toolbar(self) -> None:
         pass
 
     def show(self) -> None:
         self.widget.show()
+
+    def set_state(self, state) -> None:
+        self.widget.setWindowState(state.value)

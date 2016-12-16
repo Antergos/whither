@@ -29,20 +29,28 @@
 """ Base class for Window classes """
 
 # Standard Lib
+from typing import Type
 from enum import Enum
 
 # This Library
-from .object import BaseObject
+from .object import BaseObject, SharedData
 
 
 class Window(BaseObject):
 
-    state = Enum('maximized', 'fullscreen')
+    states = None  # type: Type[Enum]
+    state = None   # type: Type[Enum]
 
     def __init__(self) -> None:
         super().__init__(name='main_window')
 
+    def _initialize(self) -> None:
+        raise NotImplementedError()
+
     def show(self) -> None:
+        raise NotImplementedError()
+
+    def set_state(self) -> None:
         raise NotImplementedError()
 
 

@@ -38,5 +38,3 @@ class Application(BaseObject):
 
     def run(self) -> int:
         raise NotImplementedError()
-
-

@@ -3,6 +3,32 @@
 # install multiple Whither-based apps on a single system, each with their own configuration.
 
 # App Name
+Example:
+    # Whither's Config
+    whither:
+        app_id: com.antergos.cnchi
+        toolkit: auto # auto|qt|gtk
+        window:
+            width: 1120
+            height: 720
+            initial_state: normal # normal|maximized|minimized|fullscreen
+            decorated: False
+            title: Cnchi Installer
+            icon: /usr/share/cnchi/data/icons/48x48/cnchi.png
+        toolbar:
+            enabled: False
+            items:
+                File:
+                  - Item 1
+                  - Item 2
+                Edit:
+                  - Item 1
+                  - Item 2
+
+    # App's Config
+    app:
+
+# App Name
 Cnchi:
     # Whither's Config
     whither:
@@ -15,6 +41,8 @@ Cnchi:
             decorated: False
             title: Cnchi Installer
             icon: /usr/share/cnchi/data/icons/48x48/cnchi.png
+        toolbar:
+            enabled: False
 
     # App's Config
     app:
