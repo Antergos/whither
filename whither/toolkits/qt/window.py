@@ -29,10 +29,9 @@
 """ Wrapper for QMainWindow """
 
 # Standard Lib
-from enum import Enum
 
 # 3rd-Party Libs
-from PyQt5.QtWidgets import QMainWindow, QAction
+from PyQt5.QtWidgets import QMainWindow, QAction, qApp
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
@@ -40,21 +39,21 @@ from PyQt5.QtGui import QIcon
 from whither.base.window import Window
 
 
-class WindowState(Enum):
-    NORMAL = Qt.WindowNoState
-    MINIMIZED = Qt.WindowMinimized
-    MAXIMIZED = Qt.WindowMaximized
-    FULLSCREEN = Qt.WindowFullScreen
+WINDOW_STATES = {
+    'NORMAL': Qt.WindowNoState,
+    'MINIMIZED': Qt.WindowMinimized,
+    'MAXIMIZED': Qt.WindowMaximized,
+    'FULLSCREEN': Qt.WindowFullScreen,
+}
 
 
 class QtWindow(Window):
-
-    states = WindowState
 
     def __init__(self) -> None:
         super().__init__()
 
         self.widget = QMainWindow()
+        self.states = WINDOW_STATES
 
         self._initialize()
 
@@ -71,13 +70,31 @@ class QtWindow(Window):
         self.set_state(self.states[state])
 
         if config.decorated and toolbar_config.enabled:
-            self.init_toolbar()
+            self.init_menu_bar()
 
-    def init_toolbar(self) -> None:
-        pass
+    def init_menu_bar(self) -> None:
+        exit_action = QAction(QIcon('exit.png'), '&Exit', self)
+        exit_action.setShortcut('Ctrl+Q')
+        exit_action.setStatusTip('Exit application')
+        exit_action.triggered.connect(qApp.quit)
+
+        menu_bar = self.menuBar()
+
+        file_menu = menu_bar.addMenu('&File')
+        file_menu.addAction(exit_action)
+
+        edit_menu = menu_bar.addMenu('&Edit')
+        edit_menu.addAction(exit_action)
+
+        view_menu = menu_bar.addMenu('&View')
+        view_menu.addAction(exit_action)
+
+        about_menu = menu_bar.addMenu('&About')
+        about_menu.addAction(exit_action)
 
     def show(self) -> None:
         self.widget.show()
 
-    def set_state(self, state) -> None:
-        self.widget.setWindowState(state.value)
+    def set_state(self, state: int) -> None:
+        if state != self.state:
+            self.widget.setWindowState(state)

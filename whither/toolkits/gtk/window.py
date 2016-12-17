@@ -27,15 +27,24 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 """ Wrapper for GtkWindow """
+# Standard Lib
+from enum import Enum
 
 # 3rd-Party Libs
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_versions({'Gtk': '3.0', 'Gdk': '3.0'})
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 # This Library
 from whither.base.window import Window
+
+
+WINDOW_STATES = {
+    'MINIMIZED': Gdk.WindowState.ICONIFIED,
+    'MAXIMIZED': Gdk.WindowState.MAXIMIZED,
+    'FULLSCREEN': Gdk.WindowState.FULLSCREEN,
+}
 
 
 class GtkWindow(Window):

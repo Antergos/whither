@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# bootstrap.py
+# web_container.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,15 +26,15 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Bootstraps the application using either Qt (preferred) or Gtk. """
 
-try:
-    from .qt.window import QtWindow as Window
-    from .qt.application import QtApplication as Application
-    from .qt.web_container import QtWebContainer as WebContainer
-except ImportError:
-    from .gtk.window import GtkWindow as Window
-    from .gtk.application import GtkApplication as Application
-    from .gtk.web_container import GtkWebContainer as WebContainer
+# This Library
+from .object import BaseObject
 
 
+class WebContainer(BaseObject):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def _init_bridge_channel(self):
+        raise NotImplementedError()

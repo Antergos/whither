@@ -30,7 +30,6 @@
 
 # Standard Lib
 from typing import Type
-from enum import Enum
 
 # This Library
 from .object import BaseObject, SharedData
@@ -38,8 +37,8 @@ from .object import BaseObject, SharedData
 
 class Window(BaseObject):
 
-    states = None  # type: Type[Enum]
-    state = None   # type: Type[Enum]
+    states = SharedData('states')
+    state = None
 
     def __init__(self) -> None:
         super().__init__(name='main_window')
@@ -50,7 +49,7 @@ class Window(BaseObject):
     def show(self) -> None:
         raise NotImplementedError()
 
-    def set_state(self) -> None:
+    def set_state(self, state: int) -> None:
         raise NotImplementedError()
 
 

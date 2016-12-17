@@ -25,3 +25,49 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
+
+
+# 3rd-Party Libs
+from PyQt5.QtWebChannel import QWebChannel
+from PyQt5 import QtWebEngineWidgets
+from PyQt5.QtCore import QUrl
+
+# This Library
+from whither.base.web_container import WebContainer
+
+
+class QtWebContainer(WebContainer):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.page = QtWebEngineWidgets.QWebEnginePage(self._main_window.widget)
+        self.view = QtWebEngineWidgets.QWebEngineView(self._main_window.widget)
+        self.channel = QWebChannel(self.page)
+
+        self._initialize()
+        self._init_bridge_channel()
+
+        self.page.load(QUrl(self._config.whither.entry_point))
+        self.view.show()
+        self._main_window.widget.setCentralWidget(self.view)
+
+    def _init_bridge_channel(self):
+        self.page.setWebChannel(self.channel)
+        # self.channel.registerObject('PoodleBridge', self.bridge)
+        # self.channel.registerObject('PoodleBridgeViews', self.views)
+        # self.channel.registerObject('PoodleBridgeRouter', self.router)
+
+    def _initialize(self) -> None:
+        page_settings = self.page.settings().globalSettings()
+
+        self.page.setView(self.view)
+
+        page_settings.setAttribute(
+            QtWebEngineWidgets.QWebEngineSettings.LocalContentCanAccessRemoteUrls, True
+        )
+        page_settings.setAttribute(
+            QtWebEngineWidgets.QWebEngineSettings.LocalContentCanAccessFileUrls, True
+        )
+        page_settings.setAttribute(
+            QtWebEngineWidgets.QWebEngineSettings.ScrollAnimatorEnabled, True
+        )

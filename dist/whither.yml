@@ -8,6 +8,7 @@ Example:
     whither:
         app_id: com.antergos.cnchi
         toolkit: auto # auto|qt|gtk
+        entry_point: file:///usr/share/cnchi/cnchi/ui/react/dist/index.html
         window:
             width: 1120
             height: 720
@@ -34,6 +35,7 @@ Cnchi:
     whither:
         app_id: com.antergos.cnchi
         toolkit: auto # auto|qt|gtk
+        entry_point: file:///usr/share/cnchi/cnchi/ui/react/dist/index.html
         window:
             width: 1120
             height: 720

@@ -29,7 +29,7 @@
 """ The primary entry point to the library. """
 
 # This Library
-from .toolkits.bootstrap import Application, Window
+from .toolkits.bootstrap import Application, Window, WebContainer
 from .base.config_loader import ConfigLoader
 
 
@@ -39,8 +39,8 @@ class App(Application):
         super().__init__()
 
         ConfigLoader(app_name, config_file_path)
-
         Window()
+        WebContainer()
 
         self._main_window.show()
 
