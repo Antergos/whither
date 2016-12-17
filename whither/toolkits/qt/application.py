@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 
 # This Library
-from whither.base.application import Application
+from .._application import Application
 
 
 class QtApplication(Application):

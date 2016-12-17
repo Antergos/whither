@@ -28,7 +28,7 @@
 
 
 # This Library
-from .object import BaseObject
+from whither.base.object import BaseObject
 
 
 class Application(BaseObject):

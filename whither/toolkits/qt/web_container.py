@@ -33,7 +33,7 @@ from PyQt5 import QtWebEngineWidgets
 from PyQt5.QtCore import QUrl
 
 # This Library
-from whither.base.web_container import WebContainer
+from .._web_container import WebContainer
 
 
 class QtWebContainer(WebContainer):

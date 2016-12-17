@@ -27,6 +27,7 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 """ Wrapper for GtkWindow """
+
 # Standard Lib
 from enum import Enum
 
@@ -37,7 +38,7 @@ gi.require_versions({'Gtk': '3.0', 'Gdk': '3.0'})
 from gi.repository import Gtk, Gdk
 
 # This Library
-from whither.base.window import Window
+from .._window import Window
 
 
 WINDOW_STATES = {

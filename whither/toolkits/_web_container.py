@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# window.py
+# web_container.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,30 +26,15 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Base class for Window classes """
-
-# Standard Lib
-from typing import Type
 
 # This Library
-from .object import BaseObject, SharedData
+from whither.base.object import BaseObject
 
 
-class Window(BaseObject):
-
-    states = SharedData('states')
-    state = None
+class WebContainer(BaseObject):
 
     def __init__(self) -> None:
-        super().__init__(name='main_window')
+        super().__init__()
 
-    def _initialize(self) -> None:
+    def _init_bridge_channel(self) -> None:
         raise NotImplementedError()
-
-    def show(self) -> None:
-        raise NotImplementedError()
-
-    def set_state(self, state: int) -> None:
-        raise NotImplementedError()
-
-

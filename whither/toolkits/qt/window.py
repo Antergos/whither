@@ -36,7 +36,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
 # This Library
-from whither.base.window import Window
+from .._window import Window
 
 
 WINDOW_STATES = {
