@@ -34,6 +34,7 @@ from PyQt5.QtCore import QUrl
 
 # This Library
 from .._web_container import WebContainer
+from .bridge import QtBridgeObject
 
 
 class QtWebContainer(WebContainer):
@@ -43,6 +44,7 @@ class QtWebContainer(WebContainer):
         self.page = QtWebEngineWidgets.QWebEnginePage(self._main_window.widget)
         self.view = QtWebEngineWidgets.QWebEngineView(self._main_window.widget)
         self.channel = QWebChannel(self.page)
+        self.bridge = QtBridgeObject
 
         self._initialize()
         self._init_bridge_channel()
@@ -53,9 +55,7 @@ class QtWebContainer(WebContainer):
 
     def _init_bridge_channel(self):
         self.page.setWebChannel(self.channel)
-        # self.channel.registerObject('PoodleBridge', self.bridge)
-        # self.channel.registerObject('PoodleBridgeViews', self.views)
-        # self.channel.registerObject('PoodleBridgeRouter', self.router)
+        self.channel.registerObject('PoodleBridge', self.bridge)
 
     def _initialize(self) -> None:
         page_settings = self.page.settings().globalSettings()

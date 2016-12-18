@@ -6,13 +6,16 @@
 Example:
     # Whither's Config
     whither:
+        # Unique identifier string (dbus-style)
         app_id: com.antergos.cnchi
         toolkit: auto # auto|qt|gtk
+        # A valid URI for an HTML page that will be loaded when the app starts.
         entry_point: file:///usr/share/cnchi/cnchi/ui/react/dist/index.html
         window:
             width: 1120
             height: 720
             initial_state: normal # normal|maximized|minimized|fullscreen
+            # Whether or not the window should show a standard titlebar.
             decorated: False
             title: Cnchi Installer
             icon: /usr/share/cnchi/data/icons/48x48/cnchi.png

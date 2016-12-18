@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# object.py
+# _bridge.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,39 +26,17 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Whither Base Object """
+""" Base class for Window classes """
 
 # Standard Lib
 from typing import Type
 
-# This Lib
-from .data import SharedData
+# This Library
 
 
-class BaseObject:
-    _app = SharedData('_app')
-    _config = SharedData('_config')
-    _logger = SharedData('_logger')
-    _main_window = SharedData('_main_window')
-    _web_container = SharedData('_web_container')
+class BridgeObjectBase:
 
-    is_gtk = None          # type: bool
-    is_qt = None           # type: bool
+    def __init__(self, *args, **kwargs) -> None:
+        pass
 
-    def __init__(self, *args, name='base_object', **kwargs) -> None:
-        self.widget = None  # type: object
-        self.name = name
 
-        self.__register_main_components(name)
-
-    def __register_main_components(self, name):
-        components = ['main_window', 'app', 'web_container', 'config']
-
-        if name not in components:
-            return
-
-        attrib_name = '_{}'.format(name)
-        attrib = getattr(self, attrib_name)
-
-        if attrib is None:
-            setattr(self, attrib_name, self)
