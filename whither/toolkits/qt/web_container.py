@@ -44,26 +44,25 @@ WebSettings = QtWebEngineWidgets.QWebEngineSettings
 class QtWebContainer(WebContainer):
 
     def __init__(self, bridge_objects: Optional[list]) -> None:
-        super().__init__()
+        super().__init__(bridge_objects)
         self.page = QtWebEngineWidgets.QWebEnginePage(self._main_window.widget)
         self.view = QtWebEngineWidgets.QWebEngineView(self._main_window.widget)
         self.channel = QWebChannel(self.page)
         self.bridge = QtBridgeObject()
 
         self._initialize()
-        self._init_bridge_channel(bridge_objects)
+
+        if self.bridge_objects:
+            self._init_bridge_channel()
 
         self.page.load(QUrl(self._config.whither.entry_point))
         self.view.show()
         self._main_window.widget.setCentralWidget(self.view)
 
-    def _init_bridge_channel(self, bridge_objects: Optional[list]) -> None:
-        if bridge_objects is None:
-            return
-
+    def _init_bridge_channel(self) -> None:
         self.page.setWebChannel(self.channel)
 
-        for obj in bridge_objects:
+        for obj in self.bridge_objects:
             self.channel.registerObject(obj.name, self.bridge)
 
     def _initialize(self) -> None:

@@ -35,10 +35,10 @@ from whither.base.object import BaseObject
 
 class WebContainer(BaseObject):
 
-    def __init__(self, bridge_objects=None) -> None:
-        super().__init__()
+    def __init__(self, bridge_objects: Optional[list]) -> None:
+        super().__init__(name='web_container')
 
-        self.bridge_objects = bridge_objects
+        self.bridge_objects = bridge_objects or []  # type: list
 
-    def _init_bridge_channel(self, bridge_objects: Optional[list]) -> None:
+    def _init_bridge_channel(self) -> None:
         raise NotImplementedError()
