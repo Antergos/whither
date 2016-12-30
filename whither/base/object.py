@@ -47,16 +47,12 @@ class BaseObject:
 
     def __init__(self, *args, name='base_object', **kwargs) -> None:
         self.widget = None  # type: object
-        self.name = name
+        self.name = name    # type: str
 
-        self.__register_main_components(name)
+        if name in ('main_window', 'app', 'web_container', 'config'):
+            self.__register_main_component(name)
 
-    def __register_main_components(self, name):
-        components = ['main_window', 'app', 'web_container', 'config']
-
-        if name not in components:
-            return
-
+    def __register_main_component(self, name):
         attrib_name = '_{}'.format(name)
         attrib = getattr(self, attrib_name)
 

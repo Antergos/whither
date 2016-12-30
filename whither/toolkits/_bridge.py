@@ -36,7 +36,7 @@ from typing import Type
 
 class BridgeObjectBase:
 
-    def __init__(self, *args, **kwargs) -> None:
-        pass
+    def __init__(self, name='BridgeObject', *args, **kwargs) -> None:
+        self.name = name  # type: str
 
 

@@ -26,6 +26,8 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
+# Standard Lib
+from typing import Optional
 
 # 3rd-Party Libs
 from PyQt5.QtWebChannel import QWebChannel
@@ -36,38 +38,39 @@ from PyQt5.QtCore import QUrl
 from .._web_container import WebContainer
 from .bridge import QtBridgeObject
 
+WebSettings = QtWebEngineWidgets.QWebEngineSettings
+
 
 class QtWebContainer(WebContainer):
 
-    def __init__(self) -> None:
+    def __init__(self, bridge_objects: Optional[list]) -> None:
         super().__init__()
         self.page = QtWebEngineWidgets.QWebEnginePage(self._main_window.widget)
         self.view = QtWebEngineWidgets.QWebEngineView(self._main_window.widget)
         self.channel = QWebChannel(self.page)
-        self.bridge = QtBridgeObject
+        self.bridge = QtBridgeObject()
 
         self._initialize()
-        self._init_bridge_channel()
+        self._init_bridge_channel(bridge_objects)
 
         self.page.load(QUrl(self._config.whither.entry_point))
         self.view.show()
         self._main_window.widget.setCentralWidget(self.view)
 
-    def _init_bridge_channel(self):
+    def _init_bridge_channel(self, bridge_objects: Optional[list]) -> None:
+        if bridge_objects is None:
+            return
+
         self.page.setWebChannel(self.channel)
-        self.channel.registerObject('PoodleBridge', self.bridge)
+
+        for obj in bridge_objects:
+            self.channel.registerObject(obj.name, self.bridge)
 
     def _initialize(self) -> None:
         page_settings = self.page.settings().globalSettings()
 
         self.page.setView(self.view)
 
-        page_settings.setAttribute(
-            QtWebEngineWidgets.QWebEngineSettings.LocalContentCanAccessRemoteUrls, True
-        )
-        page_settings.setAttribute(
-            QtWebEngineWidgets.QWebEngineSettings.LocalContentCanAccessFileUrls, True
-        )
-        page_settings.setAttribute(
-            QtWebEngineWidgets.QWebEngineSettings.ScrollAnimatorEnabled, True
-        )
+        page_settings.setAttribute(WebSettings.LocalContentCanAccessRemoteUrls, True)
+        page_settings.setAttribute(WebSettings.LocalContentCanAccessFileUrls, True)
+        page_settings.setAttribute(WebSettings.ScrollAnimatorEnabled, True)

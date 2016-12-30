@@ -26,6 +26,8 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
+# Standard Lib
+from typing import Optional
 
 # This Library
 from whither.base.object import BaseObject
@@ -33,8 +35,10 @@ from whither.base.object import BaseObject
 
 class WebContainer(BaseObject):
 
-    def __init__(self) -> None:
+    def __init__(self, bridge_objects=None) -> None:
         super().__init__()
 
-    def _init_bridge_channel(self) -> None:
+        self.bridge_objects = bridge_objects
+
+    def _init_bridge_channel(self, bridge_objects: Optional[list]) -> None:
         raise NotImplementedError()

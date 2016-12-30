@@ -32,39 +32,44 @@
 from typing import Tuple, Union
 
 # 3rd-Party Libs
-from PyQt5.QtCore import pyqtWrapperType, pyqtSignal, pyqtSlot, QObject
+from PyQt5.QtCore import (
+    pyqtWrapperType,
+    pyqtSignal,
+    pyqtSlot,
+    QObject,
+)
 
 # This Library
 from .._bridge import BridgeObjectBase
 
 BuiltIns = Union[str, int, tuple, list, set, dict]
-SignalDef = Tuple[str, str, Tuple[BuiltIns]]
-
-
-class QtBridgeObjectBase(QObject):
-    pass
+SignalDefinition = Tuple[str, Tuple[BuiltIns]]
 
 
 class QtSignalHelper(pyqtWrapperType):
     """ This is a metaclass that makes it possible to define Qt signals dynamically """
 
-    def __new__(mcs, classname: str, bases: list, classdict: dict):
-        signals = classdict.get('_wh_signals', ())  # type: Tuple[SignalDef]
+    def __new__(mcs, classname: str, bases: list, classdict: dict) -> None:
+        signals = classdict.get('_wh_signals', ())  # type: Tuple[SignalDefinition]
 
         if signals:
             classdict = mcs.__create_signals(signals, classdict)
 
         return type.__new__(mcs, classname, bases, classdict)
 
-    def __create_signals(mcs, signals, classdict):
-        for signal_name, callback_name, arg_types in signals:
+    @staticmethod
+    def __create_signals(signals, classdict) -> dict:
+        for signal_name, arg_types in signals:
+            callback_name = '{}_cb'.format(signal_name)
             classdict[signal_name] = pyqtSignal(*arg_types, name=signal_name)
-            classdict[callback_name] = pyqtSlot(*arg_types, name=callback_name)
+
+            if callback_name in classdict:
+                classdict[callback_name] = pyqtSlot(*arg_types, name=callback_name)
 
         return classdict
 
 
-class QtBridgeObject(QtBridgeObjectBase, metaclass=QtSignalHelper):
+class QtBridgeObject(QObject, BridgeObjectBase, metaclass=QtSignalHelper):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
