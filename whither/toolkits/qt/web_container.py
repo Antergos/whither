@@ -27,28 +27,31 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 # Standard Lib
-from typing import Optional
+from typing import Optional, Tuple
 
 # 3rd-Party Libs
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5 import QtWebEngineWidgets
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QUrl, QFile
 
 # This Library
 from .._web_container import WebContainer
-from .bridge import QtBridgeObject
+from .bridge import BridgeObjectBase
 
-WebSettings = QtWebEngineWidgets.QWebEngineSettings
+# Typing Helpers
+BridgeObjects = Optional[Tuple[BridgeObjectBase]]
+
+QWebEngineSettings = QtWebEngineWidgets.QWebEngineSettings
+QWebEngineScript = QtWebEngineWidgets.QWebEngineScript
 
 
 class QtWebContainer(WebContainer):
 
-    def __init__(self, bridge_objects: Optional[list]) -> None:
+    def __init__(self, bridge_objects: BridgeObjects = None) -> None:
         super().__init__(bridge_objects)
         self.page = QtWebEngineWidgets.QWebEnginePage(self._main_window.widget)
         self.view = QtWebEngineWidgets.QWebEngineView(self._main_window.widget)
         self.channel = QWebChannel(self.page)
-        self.bridge = QtBridgeObject()
 
         self._initialize()
 
@@ -59,17 +62,33 @@ class QtWebContainer(WebContainer):
         self.view.show()
         self._main_window.widget.setCentralWidget(self.view)
 
+    @staticmethod
+    def _get_channel_api_script() -> QWebEngineScript:
+        script = QWebEngineScript()
+        script_file = QFile(':/qtwebchannel/qwebchannel.js')
+
+        if script_file.open(QFile.ReadOnly):
+            script_string = str(script_file.readAll(), 'utf-8')
+
+            script.setInjectionPoint(QWebEngineScript.DocumentReady)
+            script.setName('QWebChannel API')
+            script.setWorldId(QWebEngineScript.MainWorld)
+            script.setSourceCode(script_string)
+
+        return script
+
     def _init_bridge_channel(self) -> None:
         self.page.setWebChannel(self.channel)
+        self.page.scripts().insert(self._get_channel_api_script())
 
         for obj in self.bridge_objects:
-            self.channel.registerObject(obj.name, self.bridge)
+            self.channel.registerObject(obj.name, obj)
 
     def _initialize(self) -> None:
         page_settings = self.page.settings().globalSettings()
 
         self.page.setView(self.view)
 
-        page_settings.setAttribute(WebSettings.LocalContentCanAccessRemoteUrls, True)
-        page_settings.setAttribute(WebSettings.LocalContentCanAccessFileUrls, True)
-        page_settings.setAttribute(WebSettings.ScrollAnimatorEnabled, True)
+        page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
+        page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
+        page_settings.setAttribute(QWebEngineSettings.ScrollAnimatorEnabled, True)

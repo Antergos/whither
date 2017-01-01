@@ -78,7 +78,7 @@ class QtWindow(Window):
         exit_action.setStatusTip('Exit application')
         exit_action.triggered.connect(qApp.quit)
 
-        menu_bar = self.menuBar()
+        menu_bar = self.widget.menuBar()
 
         file_menu = menu_bar.addMenu('&File')
         file_menu.addAction(exit_action)
@@ -98,3 +98,4 @@ class QtWindow(Window):
     def set_state(self, state: int) -> None:
         if state != self.state:
             self.widget.setWindowState(state)
+            self.state = state

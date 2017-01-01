@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# web_container.py
+# bridge.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -26,22 +26,7 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-# Standard Lib
-from typing import Optional, Union, Tuple
+""" Python <=> JavaScript Bridge Object """
 
 # This Library
-from whither.base.object import BaseObject
-
-# Typing Helpers
-BridgeObjects = Optional[Tuple['BridgeObjectBase']]
-
-
-class WebContainer(BaseObject):
-
-    def __init__(self, bridge_objects: BridgeObjects = None) -> None:
-        super().__init__(name='web_container')
-
-        self.bridge_objects = bridge_objects or ()  # type: tuple
-
-    def _init_bridge_channel(self) -> None:
-        raise NotImplementedError()
+from .toolkits.bootstrap import BridgeObject

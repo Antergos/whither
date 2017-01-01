@@ -29,7 +29,6 @@
 """ Base class for Window classes """
 
 # Standard Lib
-from typing import Type
 
 # This Library
 
