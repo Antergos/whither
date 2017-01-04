@@ -29,16 +29,14 @@
 """ Wrapper for GtkWindow """
 
 # Standard Lib
-from enum import Enum
 
 # 3rd-Party Libs
 import gi
 gi.require_versions({'Gtk': '3.0', 'Gdk': '3.0'})
-
 from gi.repository import Gtk, Gdk
 
 # This Library
-from .._window import Window
+from whither.base.objects import Window
 
 
 WINDOW_STATES = {
@@ -50,8 +48,8 @@ WINDOW_STATES = {
 
 class GtkWindow(Window):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, name: str = 'window', *args, **kwargs) -> None:
+        super().__init__(name=name, *args, **kwargs)
 
         self.widget = Gtk.Window()
 

@@ -33,7 +33,7 @@ import os
 import ruamel.yaml as yaml
 
 # This Lib
-from .object import BaseObject
+from .objects import BaseObject
 
 CONFIG_FB = '/home/dustin/github/antergos/cnchi/cnchi/ui/dev/whither/dist/whither.yml'
 
@@ -43,7 +43,7 @@ class ConfigLoader(BaseObject):
     config_path_fallback = CONFIG_FB  # type: str
     config = {}                       # type: dict
 
-    def __init__(self, app_name, config_file_path='') -> None:
+    def __init__(self, app_name: str, config_file_path: str) -> None:
         super().__init__(name='config_loader')
 
         if config_file_path:
@@ -53,7 +53,7 @@ class ConfigLoader(BaseObject):
 
         self._config = self.config
 
-    def load_config(self, app_name) -> None:
+    def load_config(self, app_name: str) -> None:
         config_paths = [self.config_path, self.config_path_fallback]
         config_files = [p for p in config_paths if p and os.path.exists(p)]
 

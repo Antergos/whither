@@ -34,16 +34,16 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 # This Library
-from .._application import Application
+from whither.base.objects import Application
 
 
 class GtkApplication(Application):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, name: str = 'application', *args, **kwargs) -> None:
+        super().__init__(name=name, *args, **kwargs)
 
-        self.widget = Gtk.Application()
-        self.is_qt, self.is_gtk = False, True
+        self.widget = Gtk.Application()        # type: Gtk.Application
+        self.is_qt, self.is_gtk = False, True  # type: bool
 
     def run(self) -> int:
         return self.widget.run(None)

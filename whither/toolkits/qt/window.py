@@ -36,8 +36,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
 # This Library
-from .._window import Window
-
+from whither.base.objects import Window
 
 WINDOW_STATES = {
     'NORMAL': Qt.WindowNoState,
@@ -49,11 +48,11 @@ WINDOW_STATES = {
 
 class QtWindow(Window):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, name: str = 'window', *args, **kwargs) -> None:
+        super().__init__(name=name, *args, **kwargs)
 
-        self.widget = QMainWindow()
-        self.states = WINDOW_STATES
+        self.widget = QMainWindow()  # type: QMainWindow
+        self.states = WINDOW_STATES  # type: dict
 
         self._initialize()
 

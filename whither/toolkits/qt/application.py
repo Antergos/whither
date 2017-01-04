@@ -30,19 +30,18 @@
 
 # 3rd-Party Libs
 from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import Qt
 
-# This Library
-from .._application import Application
+# This Lib
+from whither.base.objects import Application
 
 
 class QtApplication(Application):
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, name: str = 'application', *args, **kwargs) -> None:
+        super().__init__(name=name, *args, **kwargs)
 
-        self.widget = QApplication([])
-        self.is_qt, self.is_gtk = True, False
+        self.widget = QApplication([])         # type: QApplication
+        self.is_qt, self.is_gtk = True, False  # type: bool
 
     def run(self) -> int:
         return self.widget.exec_()

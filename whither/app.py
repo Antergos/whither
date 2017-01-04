@@ -29,18 +29,21 @@
 """ The primary entry point to the library. """
 
 # Standard Lib
-from typing import Optional
 
 # This Library
 from .toolkits.bootstrap import Application, Window, WebContainer
-from .toolkits._web_container import BridgeObjects
+from .base.objects import BridgeObjs
 from .base.config_loader import ConfigLoader
 
 
 class App(Application):
 
-    def __init__(self, app_name, config_file='', bridge_objects: BridgeObjects = None) -> None:
-        super().__init__()
+    def __init__(self,
+                 app_name,
+                 config_file='',
+                 bridge_objects: BridgeObjs = None, *args, **kwargs) -> None:
+
+        super().__init__(name=app_name, *args, **kwargs)
 
         ConfigLoader(app_name, config_file)
         Window()

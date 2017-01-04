@@ -26,10 +26,10 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Base class for Window classes """
+""" Qt Implementation of Python<->JavaScript Bridge Object """
 
 # Standard Lib
-from typing import Tuple, Union
+from typing import Tuple, Union, Type
 
 # 3rd-Party Libs
 from PyQt5.QtCore import (
@@ -40,10 +40,10 @@ from PyQt5.QtCore import (
 )
 
 # This Library
-from .._bridge import BridgeObjectBase
+from whither.base.objects import BridgeObjectBase
 
 BuiltIns = Union[str, int, tuple, list, set, dict]
-SignalDefinition = Tuple[str, Tuple[BuiltIns]]
+SignalDefinition = Tuple[str, Tuple[Type[BuiltIns]]]
 
 
 class QtSignalHelper(pyqtWrapperType):
@@ -58,7 +58,7 @@ class QtSignalHelper(pyqtWrapperType):
         return type.__new__(mcs, classname, bases, classdict)
 
     @staticmethod
-    def __create_signals(signals, classdict) -> dict:
+    def __create_signals(signals: Tuple[SignalDefinition], classdict: dict) -> dict:
         for signal_name, arg_types in signals:
             callback_name = '{}_cb'.format(signal_name)
             classdict[signal_name] = pyqtSignal(*arg_types, name=signal_name)
@@ -71,7 +71,5 @@ class QtSignalHelper(pyqtWrapperType):
 
 class QtBridgeObject(QObject, BridgeObjectBase, metaclass=QtSignalHelper):
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
-
+    def __init__(self, name: str = 'bridge_object', *args, **kwargs) -> None:
+        super().__init__(name=name, *args, **kwargs)

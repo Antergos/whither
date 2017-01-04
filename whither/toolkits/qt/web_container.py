@@ -27,31 +27,36 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 # Standard Lib
-from typing import Optional, Tuple
+from typing import Tuple
 
 # 3rd-Party Libs
+from PyQt5.QtWebEngineWidgets import (
+    QWebEnginePage,
+    QWebEngineView,
+    QWebEngineSettings,
+    QWebEngineScript,
+)
 from PyQt5.QtWebChannel import QWebChannel
-from PyQt5 import QtWebEngineWidgets
 from PyQt5.QtCore import QUrl, QFile
 
 # This Library
-from .._web_container import WebContainer
-from .bridge import BridgeObjectBase
+from whither.base.objects import BridgeObjectBase, WebContainer
 
 # Typing Helpers
-BridgeObjects = Optional[Tuple[BridgeObjectBase]]
-
-QWebEngineSettings = QtWebEngineWidgets.QWebEngineSettings
-QWebEngineScript = QtWebEngineWidgets.QWebEngineScript
+BridgeObjects = Tuple[BridgeObjectBase]
 
 
 class QtWebContainer(WebContainer):
 
-    def __init__(self, bridge_objects: BridgeObjects = None) -> None:
-        super().__init__(bridge_objects)
-        self.page = QtWebEngineWidgets.QWebEnginePage(self._main_window.widget)
-        self.view = QtWebEngineWidgets.QWebEngineView(self._main_window.widget)
-        self.channel = QWebChannel(self.page)
+    def __init__(self,
+                 name: str = 'web_container',
+                 bridge_objs: BridgeObjects = None, *args, **kwargs) -> None:
+
+        super().__init__(name=name, bridge_objs=bridge_objs, *args, **kwargs)
+
+        self.page = QWebEnginePage(self._main_window.widget)  # type: QWebEnginePage
+        self.view = QWebEngineView(self._main_window.widget)  # type: QWebEngineView
+        self.channel = QWebChannel(self.page)                 # type: QWebChannel
 
         self._initialize()
 
