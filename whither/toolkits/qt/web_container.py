@@ -27,6 +27,7 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 # Standard Lib
+import os
 from typing import Tuple
 
 # 3rd-Party Libs
@@ -40,19 +41,22 @@ from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtCore import QUrl, QFile
 
 # This Library
-from whither.base.objects import BridgeObjectBase, WebContainer
+from whither.base.objects import WebContainer
 
 # Typing Helpers
-BridgeObjects = Tuple[BridgeObjectBase]
+BridgeObjects = Tuple['BridgeObject']
 
 
 class QtWebContainer(WebContainer):
 
     def __init__(self,
                  name: str = 'web_container',
-                 bridge_objs: BridgeObjects = None, *args, **kwargs) -> None:
+                 bridge_objs: BridgeObjects = None, debug: bool = False, *args, **kwargs) -> None:
 
         super().__init__(name=name, bridge_objs=bridge_objs, *args, **kwargs)
+
+        if debug:
+            os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '1234'
 
         self.page = QWebEnginePage(self._main_window.widget)  # type: QWebEnginePage
         self.view = QWebEngineView(self._main_window.widget)  # type: QWebEngineView
@@ -103,7 +107,7 @@ class QtWebContainer(WebContainer):
 
         for obj in self.bridge_objects:
             if obj not in registered_objects:
-                self.channel.registerObject(obj.name, obj)
+                self.channel.registerObject(obj._name, obj)
 
     def load(self, url: str = '') -> None:
         url = url if url else self._config.entry_point.url

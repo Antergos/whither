@@ -41,13 +41,13 @@ class App(Application):
     def __init__(self,
                  app_name,
                  config_file='',
-                 bridge_objects: BridgeObjs = None, *args, **kwargs) -> None:
+                 bridge_objects: BridgeObjs = None, debug: bool = False, *args, **kwargs) -> None:
 
         super().__init__(name=app_name, *args, **kwargs)
 
         ConfigLoader(app_name, config_file)
         Window()
-        WebContainer(bridge_objects=bridge_objects)
+        WebContainer(bridge_objects=bridge_objects, debug=debug)
 
         self._main_window.show()
 

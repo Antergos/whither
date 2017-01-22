@@ -36,11 +36,11 @@ from PyQt5.QtCore import (
     pyqtWrapperType,
     pyqtSignal,
     pyqtSlot,
+    pyqtProperty,
     QObject,
 )
 
 # This Library
-from whither.base.objects import BridgeObjectBase
 
 BuiltIns = Union[str, int, tuple, list, set, dict]
 SignalDefinition = Tuple[str, Tuple[Type[BuiltIns]]]
@@ -69,7 +69,9 @@ class QtSignalHelper(pyqtWrapperType):
         return classdict
 
 
-class QtBridgeObject(BridgeObjectBase, QObject):
+class BridgeObject(QObject):
 
     def __init__(self, name: str = 'bridge_object', *args, **kwargs) -> None:
-        super().__init__(name=name, *args, **kwargs)
+        super().__init__(parent=None)
+
+        self._name = name

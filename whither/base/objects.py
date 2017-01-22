@@ -73,12 +73,6 @@ class Application(BaseObject):
         raise NotImplementedError()
 
 
-class BridgeObjectBase:
-
-    def __init__(self, name: str = 'bridge_object_base', *args, **kwargs) -> None:
-        self.name = name
-
-
 class WebContainer(BaseObject):
 
     def __init__(self,

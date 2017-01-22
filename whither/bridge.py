@@ -29,4 +29,4 @@
 """ Python <=> JavaScript Bridge Object """
 
 # This Library
-from .toolkits.bootstrap import BridgeObject
+from .toolkits.bootstrap import BridgeObject, prop
