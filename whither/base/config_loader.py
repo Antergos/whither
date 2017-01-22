@@ -35,13 +35,14 @@ import ruamel.yaml as yaml
 # This Lib
 from .objects import BaseObject
 
-CONFIG_FB = '/home/dustin/github/antergos/cnchi/cnchi/ui/dev/whither/dist/whither.yml'
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+CONFIG_FB = os.path.join(BASE_DIR, 'whither.yml')
 
 
 class ConfigLoader(BaseObject):
-    config_path = '/etc/whither.yml'  # type: str
+    config_path = None                # type: str
     config_path_fallback = CONFIG_FB  # type: str
-    config = {}                       # type: dict
 
     def __init__(self, app_name: str, config_file_path: str) -> None:
         super().__init__(name='config_loader')
@@ -49,20 +50,21 @@ class ConfigLoader(BaseObject):
         if config_file_path:
             self.config_path = config_file_path
 
-        self.load_config(app_name)
+        config = self.load_config(app_name)
 
-        self._config = self.config
+        super().__setattr__('config', config['app'])
+        super().__setattr__('_config', config['whither'])
 
-    def load_config(self, app_name: str) -> None:
+    def load_config(self, app_name: str) -> dict:
         config_paths = [self.config_path, self.config_path_fallback]
         config_files = [p for p in config_paths if p and os.path.exists(p)]
 
         if not any(config_files):
             self._logger.error('Config file not found (load_config() failed!)')
-            return
+            return {}
 
         data = open(config_files[0], 'r').read()
         config = yaml.safe_load(data)
         config = config[app_name]
 
-        self.config = {key: value for key, value in config.items()}
+        return {key: value for key, value in config.items()}

@@ -47,7 +47,7 @@ class App(Application):
 
         ConfigLoader(app_name, config_file)
         Window()
-        WebContainer(bridge_objects)
+        WebContainer(bridge_objects=bridge_objects)
 
         self._main_window.show()
 

@@ -60,10 +60,11 @@ class QtWebContainer(WebContainer):
 
         self._initialize()
 
-        if self.bridge_objects:
-            self._init_bridge_channel()
+        self._init_bridge_channel()
 
-        self.page.load(QUrl(self._config.whither.entry_point))
+        if self._config.entry_point.autoload:
+            self.load()
+
         self.view.show()
         self._main_window.widget.setCentralWidget(self.view)
 
@@ -86,8 +87,7 @@ class QtWebContainer(WebContainer):
         self.page.setWebChannel(self.channel)
         self.page.scripts().insert(self._get_channel_api_script())
 
-        for obj in self.bridge_objects:
-            self.channel.registerObject(obj.name, obj)
+        self.initialize_bridge_objects()
 
     def _initialize(self) -> None:
         page_settings = self.page.settings().globalSettings()
@@ -97,3 +97,15 @@ class QtWebContainer(WebContainer):
         page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
         page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
         page_settings.setAttribute(QWebEngineSettings.ScrollAnimatorEnabled, True)
+
+    def initialize_bridge_objects(self) -> None:
+        registered_objects = self.channel.registeredObjects()
+
+        for obj in self.bridge_objects:
+            if obj not in registered_objects:
+                self.channel.registerObject(obj.name, obj)
+
+    def load(self, url: str = '') -> None:
+        url = url if url else self._config.entry_point.url
+
+        self.page.load(QUrl(url))

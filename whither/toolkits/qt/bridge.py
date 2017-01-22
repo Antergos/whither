@@ -69,7 +69,7 @@ class QtSignalHelper(pyqtWrapperType):
         return classdict
 
 
-class QtBridgeObject(QObject, BridgeObjectBase, metaclass=QtSignalHelper):
+class QtBridgeObject(BridgeObjectBase, QObject):
 
     def __init__(self, name: str = 'bridge_object', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)

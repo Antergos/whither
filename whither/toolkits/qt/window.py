@@ -48,7 +48,7 @@ WINDOW_STATES = {
 
 class QtWindow(Window):
 
-    def __init__(self, name: str = 'window', *args, **kwargs) -> None:
+    def __init__(self, name: str = 'main_window', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
         self.widget = QMainWindow()  # type: QMainWindow
@@ -57,8 +57,8 @@ class QtWindow(Window):
         self._initialize()
 
     def _initialize(self) -> None:
-        config = self._config.whither.window
-        toolbar_config = self._config.whither.toolbar
+        config = self._config.window
+        toolbar_config = self._config.toolbar
         state = config.initial_state.upper()
 
         self.widget.setAttribute(Qt.WA_DeleteOnClose)
@@ -70,6 +70,14 @@ class QtWindow(Window):
 
         if config.decorated and toolbar_config.enabled:
             self.init_menu_bar()
+
+        elif not config.decorated:
+            self.widget.setWindowFlags(self.widget.windowFlags() | Qt.FramelessWindowHint)
+
+        if config.stays_on_top:
+            self.widget.setWindowFlags(
+                self.widget.windowFlags() | Qt.X11BypassWindowManagerHint | Qt.WindowStaysOnTopHint
+            )
 
     def init_menu_bar(self) -> None:
         exit_action = QAction(QIcon('exit.png'), '&Exit', self)
@@ -93,6 +101,15 @@ class QtWindow(Window):
 
     def show(self) -> None:
         self.widget.show()
+
+    def show_fullscreen(self) -> None:
+        self.widget.showFullscreen()
+
+    def show_maximized(self) -> None:
+        self.widget.showMaximized()
+
+    def show_minimized(self) -> None:
+        self.widget.showMinimized()
 
     def set_state(self, state: int) -> None:
         if state != self.state:

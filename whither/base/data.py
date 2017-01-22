@@ -50,24 +50,30 @@ class AttributeDict(dict):
     def __getattr__(self, attr):
         if attr in self:
             return self[attr]
+
         raise AttributeError()
 
     def __setattr__(self, attr, value):
-        with self._lock:
-            if isinstance(value, dict) and not isinstance(value, AttributeDict):
-                # Make the value an AttributeDict
-                value = AttributeDict(value)
-
-            self[attr] = value
+        return self.__setitem__(attr, value)
 
     def __setitem__(self, item, value):
         if '_lock' == item:
             return super().__setitem__(item, value)
 
-        with self._lock:
-            self[item] = value
+        value = self._maybe_make_attribute_dict(value)
 
-    def _process_dict(self, from_dict):
+        with self._lock:
+            return super().__setitem__(item, value)
+
+    @staticmethod
+    def _maybe_make_attribute_dict(value):
+        if not isinstance(value, dict) or isinstance(value, AttributeDict):
+            return value
+
+        return AttributeDict(value)
+
+    @staticmethod
+    def _process_dict(from_dict):
         for key, value in from_dict.items():
             if isinstance(value, dict):
                 from_dict[key] = AttributeDict(value)
@@ -84,7 +90,7 @@ class SharedData:
         from_dict (dict): Initial data to store.
 
     """
-    _data = dict()
+    _data = {}
 
     def __init__(self, name, from_dict=None):
         self.name = name

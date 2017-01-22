@@ -45,14 +45,15 @@ class BaseObject:
     _main_window = SharedData('_main_window')      # type: Type['Window']
     _web_container = SharedData('_web_container')  # type: Type['WebContainer']
 
-    is_gtk = None  # type: bool
-    is_qt = None   # type: bool
+    config = SharedData('config')                  # type: Type[AttributeDict]
+    is_gtk = None                                  # type: bool
+    is_qt = None                                   # type: bool
 
     def __init__(self, name: str = 'base_object', *args, **kwargs) -> None:
         self.widget = None  # type: object
         self.name = name
 
-        if name in ('main_window', 'application', 'web_container', 'config'):
+        if name in ('main_window', 'application', 'web_container'):
             self.__register_main_component(name)
 
     def __register_main_component(self, name: str) -> None:
@@ -88,8 +89,11 @@ class WebContainer(BaseObject):
 
         self.bridge_objects = bridge_objs or ()  # type: tuple
 
-    def _init_bridge_channel(self) -> None:
+    def initialize_bridge_objects(self) -> None:
         raise NotImplementedError()
+
+    def load(self, url: str) -> None:
+        raise NotImplementedError
 
 
 class Window(BaseObject):
@@ -97,7 +101,7 @@ class Window(BaseObject):
     states = SharedData('states')  # type: AttributeDict
     state = None                   # type: int
 
-    def __init__(self, name: str = 'window', *args, **kwargs) -> None:
+    def __init__(self, name: str = 'main_window', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
     def _initialize(self) -> None:
