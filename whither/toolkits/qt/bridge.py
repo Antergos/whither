@@ -46,6 +46,20 @@ BuiltIns = Union[str, int, tuple, list, set, dict]
 SignalDefinition = Tuple[str, Tuple[Type[BuiltIns]]]
 
 
+class Bridge:
+    @staticmethod
+    def method(*args, **kwargs):
+        return pyqtSlot(*args, **kwargs)
+
+    @staticmethod
+    def prop(*args, **kwargs):
+        return pyqtProperty(*args, **kwargs)
+
+    @staticmethod
+    def signal(*args, **kwargs):
+        return pyqtSignal(*args, **kwargs)
+
+
 class QtSignalHelper(pyqtWrapperType):
     """ This is a metaclass that makes it possible to define Qt signals dynamically """
 

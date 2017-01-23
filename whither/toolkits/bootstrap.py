@@ -33,7 +33,7 @@ try:
     from .qt.application import QtApplication as Application
     from .qt.web_container import QtWebContainer as WebContainer
     from .qt.bridge import BridgeObject
-    from .qt.bridge import pyqtProperty as prop
+    from .qt.bridge import Bridge as bridge
 except ImportError:
     from .gtk.window import GtkWindow as Window
     from .gtk.application import GtkApplication as Application
