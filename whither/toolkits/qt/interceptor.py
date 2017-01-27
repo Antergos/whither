@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# application.py
+# interceptor.py
 #
 # Copyright © 2016-2017 Antergos
 #
@@ -29,22 +29,17 @@
 """ Wrapper for QMainWindow """
 
 # 3rd-Party Libs
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import QObject
+from PyQt5.QtWebEngineCore import (
+    QWebEngineUrlRequestInterceptor,
+    QWebEngineUrlRequestInfo,
+)
 
-# This Lib
-from whither.base.objects import Application
 
+class QtUrlRequestInterceptor(QWebEngineUrlRequestInterceptor):
 
-class QtApplication(Application):
+    def intercept_request(self, info: QWebEngineUrlRequestInfo) -> None:
+        pass
 
-    def __init__(self, name: str = 'application', *args, **kwargs) -> None:
-        super().__init__(name=name, *args, **kwargs)
-
-        self.widget = QApplication([])         # type: QApplication
-        self.is_qt, self.is_gtk = True, False  # type: bool
-
-        self.widget.setAttribute(Qt.AA_EnableHighDpiScaling)
-
-    def run(self) -> int:
-        return self.widget.exec_()
+    def interceptRequest(self, info: QWebEngineUrlRequestInfo) -> None:
+        self.intercept_request(info)

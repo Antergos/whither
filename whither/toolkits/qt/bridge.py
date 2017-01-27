@@ -33,7 +33,7 @@ from typing import Tuple, Union, Type
 
 # 3rd-Party Libs
 from PyQt5.QtCore import (
-    pyqtWrapperType,
+    QMetaObject,
     pyqtSignal,
     pyqtSlot,
     pyqtProperty,
@@ -57,10 +57,17 @@ class Bridge:
 
     @staticmethod
     def signal(*args, **kwargs):
-        return pyqtSignal(*args, **kwargs)
+        if args and kwargs:
+            return pyqtSignal(*args, **kwargs)
+        elif args:
+            return pyqtSignal(*args)
+        elif kwargs:
+            return pyqtSignal(**kwargs)
+        else:
+            return pyqtSignal()
 
 
-class QtSignalHelper(pyqtWrapperType):
+class QtSignalHelper(type(QMetaObject)):
     """ This is a metaclass that makes it possible to define Qt signals dynamically """
 
     def __new__(mcs, classname: str, bases: list, classdict: dict) -> None:

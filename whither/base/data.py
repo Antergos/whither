@@ -80,6 +80,9 @@ class AttributeDict(dict):
 
         return from_dict
 
+    def as_dict(self):
+        return {k: v for k, v in self.items()}
+
 
 class SharedData:
     """
