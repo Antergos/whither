@@ -100,6 +100,8 @@ class QtWebContainer(WebContainer):
         self.page.setWebChannel(self.channel)
         self.page.scripts().insert(self._get_channel_api_script())
 
+        self.bridge_initialized = True
+
     def _initialize_page(self, page: QWebEnginePage) -> None:
         page_settings = self.page.settings().globalSettings()
 
