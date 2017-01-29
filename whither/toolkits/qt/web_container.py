@@ -38,10 +38,11 @@ from PyQt5.QtWebEngineWidgets import (
     QWebEngineScript,
 )
 from PyQt5.QtWebChannel import QWebChannel
-from PyQt5.QtCore import QUrl, QFile
+from PyQt5.QtCore import QUrl, QFile, Qt
 
 # This Library
 from whither.base.objects import WebContainer
+from .devtools import DevTools
 
 # Typing Helpers
 BridgeObjects = Tuple['BridgeObject']
@@ -59,12 +60,16 @@ class QtWebContainer(WebContainer):
         if debug:
             os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '1234'
 
-        self.page = QWebEnginePage(self._main_window.widget)  # type: QWebEnginePage
-        self.view = QWebEngineView(self._main_window.widget)  # type: QWebEngineView
-        self.channel = QWebChannel(self.page)                 # type: QWebChannel
+        self.view = QWebEngineView(self._main_window.widget)
+        self.page = self.view.page()
+        self.channel = QWebChannel(self.page)
         self.bridge_initialized = False
+        self.debug = debug
 
-        self._initialize_page()
+        self._initialize_page(self.page)
+
+        if debug:
+            self.devtools = DevTools()
 
         if self._config.entry_point.autoload:
             self.initialize_bridge_objects()
@@ -95,14 +100,14 @@ class QtWebContainer(WebContainer):
         self.page.setWebChannel(self.channel)
         self.page.scripts().insert(self._get_channel_api_script())
 
-    def _initialize_page(self) -> None:
+    def _initialize_page(self, page: QWebEnginePage) -> None:
         page_settings = self.page.settings().globalSettings()
-
-        self.page.setView(self.view)
 
         page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
         page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
         page_settings.setAttribute(QWebEngineSettings.ScrollAnimatorEnabled, True)
+
+        page.setView(self.view)
 
     def initialize_bridge_objects(self) -> None:
         if not self.bridge_initialized:

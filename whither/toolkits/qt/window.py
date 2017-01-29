@@ -31,7 +31,12 @@
 # Standard Lib
 
 # 3rd-Party Libs
-from PyQt5.QtWidgets import QMainWindow, QAction, qApp
+from PyQt5.QtWidgets import (
+    QMainWindow,
+    QAction,
+    qApp,
+    QWidget,
+)
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 
@@ -48,11 +53,11 @@ WINDOW_STATES = {
 
 class QtWindow(Window):
 
-    def __init__(self, name: str = 'main_window', *args, **kwargs) -> None:
+    def __init__(self, name: str = 'window', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
-        self.widget = QMainWindow()  # type: QMainWindow
         self.states = WINDOW_STATES  # type: dict
+        self.widget = None           # type: QWidget
 
         self._initialize()
 
@@ -60,6 +65,13 @@ class QtWindow(Window):
         config = self._config.window
         toolbar_config = self._config.toolbar
         state = config.initial_state.upper()
+
+        if len(self._app.windows) < 1:
+            self.widget = QMainWindow()
+        else:
+            self.widget = QWidget()
+
+        self._app.windows.append(self.widget)
 
         self.widget.setAttribute(Qt.WA_DeleteOnClose)
         self.widget.setWindowTitle(config.title)

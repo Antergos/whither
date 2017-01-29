@@ -37,6 +37,9 @@ from .data import SharedData, AttributeDict
 # Typing Helpers
 BridgeObjs = Tuple[Type['BridgeObjectBase']]
 
+# Application class is a singleton
+_APP_INSTANCE = None
+
 
 class BaseObject:
     _app = SharedData('_app')                      # type: Type['Application']
@@ -53,21 +56,26 @@ class BaseObject:
         self.widget = None  # type: object
         self.name = name
 
-        if name in ('main_window', 'application', 'web_container'):
-            self.__register_main_component(name)
-
-    def __register_main_component(self, name: str) -> None:
-        attrib_name = '_{}'.format(name)
-        attrib = getattr(self, attrib_name)
+    def _register_main_component(self, name: str) -> None:
+        attrib = getattr(self, name)
 
         if attrib is None:
-            setattr(self, attrib_name, self)
+            setattr(self, name, self)
 
 
 class Application(BaseObject):
 
+    windows = None  # type: list
+
     def __init__(self, name: str = 'application', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
+
+        global _APP_INSTANCE
+        if _APP_INSTANCE is None:
+            _APP_INSTANCE = self
+            self.windows = []
+
+        self._register_main_component('_app')
 
     def run(self) -> int:
         raise NotImplementedError()
@@ -80,6 +88,8 @@ class WebContainer(BaseObject):
                  bridge_objs: BridgeObjs = None, *args, **kwargs) -> None:
 
         super().__init__(name=name, *args, **kwargs)
+
+        self._register_main_component('_web_container')
 
         self.bridge_objects = bridge_objs or ()  # type: tuple
 
@@ -97,6 +107,8 @@ class Window(BaseObject):
 
     def __init__(self, name: str = 'main_window', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
+
+        self._register_main_component('_main_window')
 
     def _initialize(self) -> None:
         raise NotImplementedError()
