@@ -32,8 +32,7 @@ try:
     from .qt.window import QtWindow as Window
     from .qt.application import QtApplication as Application
     from .qt.web_container import QtWebContainer as WebContainer
-    from .qt.bridge import BridgeObject
-    from .qt.bridge import Bridge as bridge
+    from .qt.bridge import Bridge as bridge, BridgeObject
     from .qt.interceptor import QtUrlRequestInterceptor as UrlRequestInterceptor
     from PyQt5.QtCore import QVariant as Variant
 except ImportError:

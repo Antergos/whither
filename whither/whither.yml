@@ -1,6 +1,4 @@
 # Whither (Universal Linux Apps) Configuration
-# The top-level keys in this file should be application names. This makes it possible to
-# install multiple Whither-based apps on a single system, each with their own configuration.
 
 # App Name
 Example:

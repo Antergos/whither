@@ -29,21 +29,14 @@
 """ Qt Implementation of Python<->JavaScript Bridge Object """
 
 # Standard Lib
-from typing import Tuple, Union, Type
 
 # 3rd-Party Libs
 from PyQt5.QtCore import (
-    QMetaObject,
     pyqtSignal,
     pyqtSlot,
     pyqtProperty,
     QObject,
 )
-
-# This Library
-
-BuiltIns = Union[str, int, tuple, list, set, dict]
-SignalDefinition = Tuple[str, Tuple[Type[BuiltIns]]]
 
 
 class Bridge:
@@ -65,29 +58,6 @@ class Bridge:
             return pyqtSignal(**kwargs)
         else:
             return pyqtSignal()
-
-
-class QtSignalHelper(type(QMetaObject)):
-    """ This is a metaclass that makes it possible to define Qt signals dynamically """
-
-    def __new__(mcs, classname: str, bases: list, classdict: dict) -> None:
-        signals = classdict.get('_wh_signals', ())  # type: Tuple[SignalDefinition]
-
-        if signals:
-            classdict = mcs.__create_signals(signals, classdict)
-
-        return type.__new__(mcs, classname, bases, classdict)
-
-    @staticmethod
-    def __create_signals(signals: Tuple[SignalDefinition], classdict: dict) -> dict:
-        for signal_name, arg_types in signals:
-            callback_name = '{}_cb'.format(signal_name)
-            classdict[signal_name] = pyqtSignal(*arg_types, name=signal_name)
-
-            if callback_name in classdict:
-                classdict[callback_name] = pyqtSlot(*arg_types, name=callback_name)
-
-        return classdict
 
 
 class BridgeObject(QObject):
