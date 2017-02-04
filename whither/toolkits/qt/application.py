@@ -43,8 +43,17 @@ class QtApplication(Application):
 
         self.widget = QApplication([])         # type: QApplication
         self.is_qt, self.is_gtk = True, False  # type: bool
+        self.desktop = self.widget.desktop()
 
         self.widget.setAttribute(Qt.AA_EnableHighDpiScaling)
 
+    def _set_window_size_position(self) -> None:
+        if self._config.window.no_desktop_env is False:
+            return
+
+        self._main_window.widget.setGeometry(self.desktop.availableGeometry())
+
     def run(self) -> int:
+        self._set_window_size_position()
+
         return self.widget.exec_()

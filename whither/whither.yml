@@ -21,6 +21,8 @@ Example:
             stays_on_top: False
             title: Cnchi Installer
             icon: /usr/share/cnchi/data/icons/48x48/cnchi.png
+            # Whether or not the application will be run from within a desktop environment.
+            no_desktop_env: False
         toolbar:
             enabled: False
             items:
@@ -30,29 +32,6 @@ Example:
                 Edit:
                   - Item 1
                   - Item 2
-
-    # App's Config
-    app:
-
-# App Name
-Cnchi:
-    # Whither's Config
-    whither:
-        app_id: com.antergos.cnchi
-        toolkit: auto
-        entry_point:
-            autoload: True
-            url: file:///usr/share/cnchi/cnchi/ui/react/dist/index.html
-        window:
-            width: 1120
-            height: 720
-            initial_state: normal
-            decorated: False
-            stays_on_top: False
-            title: Cnchi Installer
-            icon: /usr/share/cnchi/data/icons/48x48/cnchi.png
-        toolbar:
-            enabled: False
 
     # App's Config
     app:

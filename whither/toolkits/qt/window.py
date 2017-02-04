@@ -64,9 +64,9 @@ class QtWindow(Window):
     def _initialize(self) -> None:
         config = self._config.window
         toolbar_config = self._config.toolbar
-        state = config.initial_state.upper()
+        initial_state = config.initial_state.upper()
 
-        if len(self._app.windows) < 1:
+        if not self._app.windows:
             self.widget = QMainWindow()
         else:
             self.widget = QWidget()
@@ -74,11 +74,15 @@ class QtWindow(Window):
         self._app.windows.append(self.widget)
 
         self.widget.setAttribute(Qt.WA_DeleteOnClose)
-        self.widget.setWindowTitle(config.title)
-        self.widget.setWindowIcon(QIcon(config.icon))
-        self.widget.setFixedSize(config.width, config.height)
 
-        self.set_state(self.states[state])
+        if config.title:
+            self.widget.setWindowTitle(config.title)
+
+        if config.icon:
+            self.widget.setWindowIcon(QIcon(config.icon))
+
+        if config.width and config.height:
+            self.widget.setFixedSize(config.width, config.height)
 
         if config.decorated and toolbar_config.enabled:
             self.init_menu_bar()
@@ -90,6 +94,8 @@ class QtWindow(Window):
             self.widget.setWindowFlags(
                 self.widget.windowFlags() | Qt.X11BypassWindowManagerHint | Qt.WindowStaysOnTopHint
             )
+
+        self.set_state(self.states[initial_state])
 
     def init_menu_bar(self) -> None:
         exit_action = QAction(QIcon('exit.png'), '&Exit', self)
@@ -115,13 +121,22 @@ class QtWindow(Window):
         self.widget.show()
 
     def show_fullscreen(self) -> None:
-        self.widget.showFullscreen()
+        try:
+            self.widget.windowHandle().showFullScreen()
+        except Exception:
+            self.widget.showFullScreen()
 
     def show_maximized(self) -> None:
-        self.widget.showMaximized()
+        try:
+            self.widget.windowHandle().showMaximized()
+        except Exception:
+            self.widget.showMaximized()
 
     def show_minimized(self) -> None:
-        self.widget.showMinimized()
+        try:
+            self.widget.windowHandle().showMinimized()
+        except Exception:
+            self.widget.showMinimized()
 
     def set_state(self, state: int) -> None:
         if state != self.state:
