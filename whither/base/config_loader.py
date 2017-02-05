@@ -27,7 +27,7 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 # Standard Lib
-import os
+import pkg_resources
 
 # 3rd Party Libs
 import ruamel.yaml as yaml
@@ -36,19 +36,11 @@ import ruamel.yaml as yaml
 from .objects import BaseObject
 
 
-BASE_DIR = os.path.dirname(os.path.realpath(__file__))
-CONFIG_FB = os.path.join(BASE_DIR, 'whither.yml')
-
-
 class ConfigLoader(BaseObject):
-    config_path = None                # type: str
-    config_path_fallback = CONFIG_FB  # type: str
+    load_from = '__main__'
 
-    def __init__(self, app_name: str, config_file_path: str) -> None:
+    def __init__(self, app_name: str) -> None:
         super().__init__(name='config_loader')
-
-        if config_file_path:
-            self.config_path = config_file_path
 
         config = self.load_config(app_name)
 
@@ -56,14 +48,11 @@ class ConfigLoader(BaseObject):
         super().__setattr__('_config', config['whither'])
 
     def load_config(self, app_name: str) -> dict:
-        config_paths = [self.config_path, self.config_path_fallback]
-        config_files = [p for p in config_paths if p and os.path.exists(p)]
+        try:
+            data = pkg_resources.resource_string(self.load_from, 'whither.yml')
+        except Exception:
+            data = pkg_resources.resource_string(__file__, 'whither.yml')
 
-        if not any(config_files):
-            self._logger.error('Config file not found (load_config() failed!)')
-            return {}
-
-        data = open(config_files[0], 'r').read()
         config = yaml.safe_load(data)
         config = config[app_name]
 

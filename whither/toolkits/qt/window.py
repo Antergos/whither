@@ -92,7 +92,7 @@ class QtWindow(Window):
 
         if config.stays_on_top:
             self.widget.setWindowFlags(
-                self.widget.windowFlags() | Qt.X11BypassWindowManagerHint | Qt.WindowStaysOnTopHint
+                self.widget.windowFlags() | Qt.WindowStaysOnTopHint
             )
 
         self.set_state(self.states[initial_state])
