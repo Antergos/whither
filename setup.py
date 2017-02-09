@@ -3,8 +3,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='whither',
-    version='0.1.0',
-    packages=['whither', 'whither.base', 'whither.toolkits'],
+    version='0.1.1',
+    packages=[
+        'whither',
+        'whither.base',
+        'whither.toolkits',
+        'whither.toolkits.qt',
+        'whither.toolkits.gtk',
+    ],
     url='https://github.com/antergos/whither',
     license='GPL-3.0',
     author='Dustin Falgout',
@@ -15,7 +21,7 @@ setup(
         'ruamel.yaml',
     ],
     package_data={
-        '': ['whither.yml']
+        '': ['whither.yml'],
     },
     classifiers=[
         'Development Status :: 3 - Alpha',
