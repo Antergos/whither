@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # web_container.py
@@ -28,17 +27,23 @@
 
 # Standard Lib
 import os
-from typing import Tuple, TypeVar
+from typing import (
+    Tuple,
+    TypeVar,
+)
 
 # 3rd-Party Libs
+from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWebEngineWidgets import (
     QWebEnginePage,
     QWebEngineView,
     QWebEngineSettings,
     QWebEngineScript,
 )
-from PyQt5.QtWebChannel import QWebChannel
-from PyQt5.QtCore import QUrl, QFile, Qt
+from PyQt5.QtCore import (
+    QUrl,
+    QFile,
+)
 
 # This Library
 from whither.base.objects import WebContainer
@@ -49,26 +54,37 @@ BridgeObjects = Tuple['BridgeObject']
 Url = TypeVar('Url', str, QUrl)
 
 
+DEFAULT_ENTRY_POINT = 'Whither: Unable to load entry point.'
+
+DISABLED_SETTINGS = [
+    'PluginsEnabled',  # Qt 5.6+
+]
+
+ENABLED_SETTINGS = [
+    'FocusOnNavigationEnabled',  # Qt 5.8+
+    'FullScreenSupportEnabled',  # Qt 5.6+
+    'LocalContentCanAccessFileUrls',
+    'ScreenCaptureEnabled',      # Qt 5.7+
+    'ScrollAnimatorEnabled',
+]
+
+
 class QtWebContainer(WebContainer):
 
-    def __init__(self,
-                 name: str = 'web_container',
-                 bridge_objs: BridgeObjects = None, debug: bool = False, *args, **kwargs) -> None:
+    def __init__(self, bridge_objs: BridgeObjects = None, *args, **kwargs) -> None:
+        super().__init__(name='_web_container', bridge_objs=bridge_objs, *args, **kwargs)
 
-        super().__init__(name=name, bridge_objs=bridge_objs, *args, **kwargs)
+        if self._config.debug_mode:
+            os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '12345'
 
-        if debug:
-            os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '1234'
-
-        self.view = QWebEngineView(self._main_window.widget)
+        self.view = QWebEngineView(parent=self._main_window.widget)
         self.page = self.view.page()
         self.channel = QWebChannel(self.page)
         self.bridge_initialized = False
-        self.debug = debug
 
         self._initialize_page(self.page)
 
-        if debug:
+        if self._config.debug_mode:
             self.devtools = DevTools()
 
         if self._config.entry_point.autoload:
@@ -105,9 +121,22 @@ class QtWebContainer(WebContainer):
     def _initialize_page(self, page: QWebEnginePage) -> None:
         page_settings = self.page.settings().globalSettings()
 
-        page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
-        page_settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
-        page_settings.setAttribute(QWebEngineSettings.ScrollAnimatorEnabled, True)
+        if self._config.allow_remote_urls:
+            ENABLED_SETTINGS.append('LocalContentCanAccessRemoteUrls')
+        else:
+            DISABLED_SETTINGS.append('LocalContentCanAccessRemoteUrls')
+
+        for setting in DISABLED_SETTINGS:
+            try:
+                page_settings.setAttribute(getattr(QWebEngineSettings, setting), False)
+            except AttributeError:
+                pass
+
+        for setting in ENABLED_SETTINGS:
+            try:
+                page_settings.setAttribute(getattr(QWebEngineSettings, setting), True)
+            except AttributeError:
+                pass
 
         page.setView(self.view)
 
@@ -123,6 +152,13 @@ class QtWebContainer(WebContainer):
 
     def load(self, url: str = '') -> None:
         url = url if url else self._config.entry_point.url
+
+        if 'http' not in url and not os.path.exists(url):
+            self.page.setHtml(DEFAULT_ENTRY_POINT)
+            return
+
+        if not url.startswith('file'):
+            url = f'file://{url}'
 
         self.page.load(QUrl(url))
 

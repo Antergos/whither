@@ -38,11 +38,11 @@ from whither.base.objects import Application
 
 class QtApplication(Application):
 
-    def __init__(self, name: str = 'application', *args, **kwargs) -> None:
-        super().__init__(name=name, *args, **kwargs)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(name='_app', *args, **kwargs)
 
-        self.widget = QApplication([])         # type: QApplication
-        self.is_qt, self.is_gtk = True, False  # type: bool
+        self.widget = QApplication([])
+        self.is_qt, self.is_gtk = True, False
         self.desktop = self.widget.desktop()
 
         self.widget.setAttribute(Qt.AA_EnableHighDpiScaling)

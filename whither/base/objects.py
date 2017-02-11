@@ -29,53 +29,75 @@
 """ Bases Classes (for future flexibility) """
 
 # Standard Lib
-from typing import Type, Tuple
+from typing import (
+    ClassVar,
+    Tuple,
+    Type,
+    TypeVar,
+)
 
 # This Lib
-from .data import SharedData, AttributeDict
+from .data import (
+    AttributeDict,
+    SharedData,
+)
 
 # Typing Helpers
-BridgeObjs = Tuple[Type['BridgeObjectBase']]
+BridgeObjects = Tuple[Type['BridgeObjectBase']]
+Widget = TypeVar('Widget', 'QObject', 'GObject')
 
 # Application class is a singleton
 _APP_INSTANCE = None
 
+_MAIN_COMPONENTS = (
+    '_app',
+    '_config',
+    '_logger',
+    '_main_window',
+    '_web_container',
+    'config',
+)
+
 
 class BaseObject:
-    _app = SharedData('_app')                      # type: Type['Application']
-    _config = SharedData('_config')                # type: Type[AttributeDict]
-    _logger = SharedData('_logger')                # type: Type['Logger']
-    _main_window = SharedData('_main_window')      # type: Type['Window']
-    _web_container = SharedData('_web_container')  # type: Type['WebContainer']
+    _app = SharedData()            # type: ClassVar[Type['Application']]
+    _config = SharedData()         # type: ClassVar[Type[AttributeDict]]
+    _logger = SharedData()         # type: ClassVar[Type['Logger']]
+    _main_window = SharedData()    # type: ClassVar[Type['Window']]
+    _web_container = SharedData()  # type: ClassVar[Type['WebContainer']]
 
-    config = SharedData('config')                  # type: Type[AttributeDict]
-    is_gtk = None                                  # type: bool
-    is_qt = None                                   # type: bool
+    config = SharedData()          # type: ClassVar[Type[AttributeDict]]
+    is_gtk = None                  # type: ClassVar[bool]
+    is_qt = None                   # type: ClassVar[bool]
+    windows = SharedData()         # type: ClassVar[list]
 
-    def __init__(self, name: str = 'base_object', *args, **kwargs) -> None:
-        self.widget = None  # type: object
-        self.name = name
+    def __init__(self, name: str, *args, **kwargs) -> None:
+        self.widget: Widget = None
+        self.name: str = name
+
+        if name in _MAIN_COMPONENTS:
+            self._register_main_component(name)
 
     def _register_main_component(self, name: str) -> None:
         attrib = getattr(self, name)
 
         if attrib is None:
+            print(f'Storing main component: {name}')
             setattr(self, name, self)
 
 
 class Application(BaseObject):
 
-    windows = None  # type: list
+    windows: ClassVar[list] = []
 
-    def __init__(self, name: str = 'application', *args, **kwargs) -> None:
-        super().__init__(name=name, *args, **kwargs)
-
+    def __init__(self, name: str, *args, **kwargs) -> None:
         global _APP_INSTANCE
-        if _APP_INSTANCE is None:
-            _APP_INSTANCE = self
-            self.windows = []
+        if _APP_INSTANCE is not None:
+            return
 
-        self._register_main_component('_app')
+        _APP_INSTANCE = self
+
+        super().__init__(name=name, *args, **kwargs)
 
     def run(self) -> int:
         raise NotImplementedError()
@@ -83,15 +105,10 @@ class Application(BaseObject):
 
 class WebContainer(BaseObject):
 
-    def __init__(self,
-                 name: str = 'web_container',
-                 bridge_objs: BridgeObjs = None, *args, **kwargs) -> None:
-
+    def __init__(self, name: str, bridge_objs: BridgeObjects = None, *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
-        self._register_main_component('_web_container')
-
-        self.bridge_objects = bridge_objs or ()  # type: tuple
+        self.bridge_objects = bridge_objs or ()
 
     def initialize_bridge_objects(self) -> None:
         raise NotImplementedError()
@@ -102,13 +119,12 @@ class WebContainer(BaseObject):
 
 class Window(BaseObject):
 
-    states = SharedData('states')  # type: AttributeDict
-    state = None                   # type: int
+    states = SharedData()  # type: ClassVar[AttributeDict]
 
-    def __init__(self, name: str = 'main_window', *args, **kwargs) -> None:
+    def __init__(self, name: str, *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
-        self._register_main_component('_main_window')
+        self.state: int = 0
 
     def _initialize(self) -> None:
         raise NotImplementedError()

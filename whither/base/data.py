@@ -40,10 +40,13 @@ class AttributeDict(dict):
 
     """
     def __init__(self, seq=None, **kwargs):
-        if seq is not None:
-            seq = self._process_dict(seq)
+        _kwargs = kwargs
 
-        super().__init__(seq, **kwargs)
+        if isinstance(seq, dict):
+            seq = self._process_dict(seq)
+            _kwargs = dict(seq, **kwargs)
+
+        super().__init__(**_kwargs)
 
         self['_lock'] = RLock()
 
@@ -51,7 +54,7 @@ class AttributeDict(dict):
         if attr in self:
             return self[attr]
 
-        raise AttributeError()
+        return None
 
     def __setattr__(self, attr, value):
         return self.__setitem__(attr, value)
@@ -60,28 +63,28 @@ class AttributeDict(dict):
         if '_lock' == item:
             return super().__setitem__(item, value)
 
-        value = self._maybe_make_attribute_dict(value)
+        value = self.maybe_make_attribute_dict(value)
 
         with self._lock:
             return super().__setitem__(item, value)
 
     @staticmethod
-    def _maybe_make_attribute_dict(value):
-        if not isinstance(value, dict) or isinstance(value, AttributeDict):
-            return value
-
-        return AttributeDict(value)
-
-    @staticmethod
     def _process_dict(from_dict):
         for key, value in from_dict.items():
-            if isinstance(value, dict):
+            if isinstance(value, dict) and not isinstance(value, AttributeDict):
                 from_dict[key] = AttributeDict(value)
 
         return from_dict
 
     def as_dict(self):
         return {k: v for k, v in self.items()}
+
+    @staticmethod
+    def maybe_make_attribute_dict(value):
+        if not isinstance(value, dict) or isinstance(value, AttributeDict):
+            return value
+
+        return AttributeDict(value)
 
 
 class SharedData:
@@ -95,51 +98,25 @@ class SharedData:
     """
     _data = {}
 
-    def __init__(self, name, from_dict=None):
+    def __init__(self, name: str = None, from_dict: dict = None) -> None:
         self.name = name
 
-        if from_dict is not None:
+        if name is not None and from_dict is not None:
             self._data[name] = AttributeDict(from_dict)
 
-        elif name not in self._data:
-            self._data[name] = None
-
     def __get__(self, instance, cls):
-        val = self if self.name not in self._data else self._data[self.name]
-        return val
+        if instance is None:
+            return self
+
+        if self.name not in self._data:
+            self._data[self.name] = None
+            return None
+
+        return self._data[self.name]
 
     def __set__(self, instance, value):
-        if isinstance(value, dict) and not isinstance(value, AttributeDict):
-            value = AttributeDict(value)
-
+        value = AttributeDict.maybe_make_attribute_dict(value)
         self._data[self.name] = value
 
-
-class NonSharedData:
-    """
-    Data descriptor that facilitates per-instance data storage/retrieval.
-
-    Attributes:
-        name      (str): The name of the bound attribute.
-
-    """
-    _data = dict()
-
-    def __init__(self, name):
+    def __set_name__(self, owner, name):
         self.name = name
-
-    def __get__(self, instance, cls):
-        val = self if not self._instance_data_check(instance) else self._data[instance.name]
-        return val
-
-    def __set__(self, instance, value):
-        if not self._instance_data_check(instance):
-            return
-
-        self._data[instance.name] = value
-
-    def _instance_data_check(self, instance):
-        if instance is not None and instance.name not in self._data:
-            self._data[instance.name] = None
-
-        return instance is not None

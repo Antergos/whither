@@ -27,33 +27,34 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 # Standard Lib
+import os
 import pkg_resources
 
 # 3rd Party Libs
 import ruamel.yaml as yaml
 
-# This Lib
-from .objects import BaseObject
 
+class ConfigLoader:
 
-class ConfigLoader(BaseObject):
-    load_from = '__main__'
+    def __init__(self, key: str, path: str = None) -> None:
+        self.load_from = path if path else '__main__'
+        self.config = self.load_config(key)
 
-    def __init__(self, app_name: str) -> None:
-        super().__init__(name='config_loader')
+    def load_config(self, key: str) -> dict:
+        if os.path.isabs(self.load_from) and os.path.exists(self.load_from):
+            data = open(self.load_from).read()
+            config = yaml.safe_load(data)
+            config = config[key]
 
-        config = self.load_config(app_name)
+        else:
 
-        super().__setattr__('config', config['app'])
-        super().__setattr__('_config', config['whither'])
-
-    def load_config(self, app_name: str) -> dict:
-        try:
-            data = pkg_resources.resource_string(self.load_from, 'whither.yml')
-        except Exception:
-            data = pkg_resources.resource_string(__file__, 'whither.yml')
-
-        config = yaml.safe_load(data)
-        config = config[app_name]
+            try:
+                data = pkg_resources.resource_string(self.load_from, 'whither.yml')
+                config = yaml.safe_load(data)
+                config = config[key]
+            except Exception:
+                data = pkg_resources.resource_string(__file__, 'whither.yml')
+                config = yaml.safe_load(data)
+                config = config[key]
 
         return {key: value for key, value in config.items()}

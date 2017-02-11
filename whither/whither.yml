@@ -4,25 +4,13 @@
 Example:
     # Whither's Config
     whither:
+        allow_remote_urls: False
         # Unique identifier string (dbus-style)
         app_id: com.antergos.cnchi
-        toolkit: auto # auto|qt|gtk
-        # A valid URI for an HTML page that will be loaded when the app starts.
         entry_point:
             autoload: True
+            # A valid URI for an HTML page that will be loaded when the app starts.
             url: file:///usr/share/cnchi/cnchi/ui/react/dist/index.html
-        window:
-            width: 1120
-            height: 720
-            initial_state: normal # normal|maximized|minimized|fullscreen
-            # Whether or not the window should show standard titlebar and action buttons.
-            decorated: True
-            # Whether or not the window should stay on top of all other windows.
-            stays_on_top: False
-            title: Cnchi Installer
-            icon: /usr/share/cnchi/data/icons/48x48/cnchi.png
-            # Whether or not the application will be run from within a desktop environment.
-            no_desktop_env: False
         toolbar:
             enabled: False
             items:
@@ -32,6 +20,19 @@ Example:
                 Edit:
                   - Item 1
                   - Item 2
+        toolkit: auto # auto|qt|gtk
+        window:
+            # Whether or not the window should show standard titlebar and action buttons.
+            decorated: True
+            height: 720
+            icon: /usr/share/cnchi/data/icons/48x48/cnchi.png
+            initial_state: normal # normal|maximized|minimized|fullscreen
+            # Whether or not the application will be run outside of a desktop environment.
+            no_desktop_env: False
+            # Whether or not the window should stay on top of all other windows.
+            stays_on_top: False
+            title: Cnchi Installer
+            width: 1120
 
     # App's Config
     app:

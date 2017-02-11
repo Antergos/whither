@@ -44,6 +44,6 @@ class DevTools:
         self.view = QWebEngineView()
         self.page = self.view.page()  # type: QWebEnginePage
 
-        self.view.load(QUrl('http://127.0.0.1:1234'))
+        self.view.load(QUrl('http://127.0.0.1:12345'))
         self.view.show()
 

@@ -32,24 +32,31 @@
 
 # This Library
 from .toolkits.bootstrap import Application, Window, WebContainer
-from .base.objects import BridgeObjs
+from .base.objects import BridgeObjects
 from .base.config_loader import ConfigLoader
 
 
 class App(Application):
 
-    def __init__(self,
-                 app_name,
-                 bridge_objects: BridgeObjs = None,
-                 debug: bool = False, *args, **kwargs) -> None:
+    def __init__(self, app_name, bridge_objects: BridgeObjects = None, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
-        super().__init__(name=app_name, *args, **kwargs)
+        super().__setattr__('config', ConfigLoader(app_name).config['app'])
+        super().__setattr__('_config', ConfigLoader(app_name).config['whither'])
 
-        ConfigLoader(app_name)
-        Window()
-        WebContainer(bridge_objects=bridge_objects, debug=debug)
+        self._before_main_window_init()
+        Window('_main_window')
+
+        self._before_web_container_init()
+        WebContainer(bridge_objects=bridge_objects)
 
         self._main_window.show()
+
+    def _before_web_container_init(self):
+        pass
+
+    def _before_main_window_init(self):
+        pass
 
 
 if __name__ == '__main__':

@@ -53,7 +53,7 @@ WINDOW_STATES = {
 
 class QtWindow(Window):
 
-    def __init__(self, name: str = 'window', *args, **kwargs) -> None:
+    def __init__(self, name: str = '_window', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
         self.states = WINDOW_STATES  # type: dict
