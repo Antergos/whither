@@ -1,7 +1,8 @@
 # whither
 [![PyPI](https://img.shields.io/pypi/v/whither.svg?style=flat-square)](https://pypi.python.org/pypi/whither) &nbsp;[![Codacy grade][codacy]](https://www.codacy.com/app/Antergos/whither) &nbsp;[![Python Versions](https://img.shields.io/pypi/pyversions/whither.svg?style=flat-square)]()
 
-#### Universal Linux Application SDK - Create once. Run everywhere.
+### Universal Linux Application SDK - Create once. Run everywhere.
+
 ## Install It
 
 ### Distro Packages
