@@ -7,19 +7,19 @@
 ### Distro Packages
 |Distro|Install Command/Links|
 |:---:|:---:|
-|![antergos](https://dl.dropboxusercontent.com/u/60521097/logo-square26x26.png)|`sudo pacman -S python-whither`|
-|![arch](https://dl.dropboxusercontent.com/u/60521097/archlogo26x26.png)|`yaourt -S python-whither`|
-|![fedora](https://dl.dropboxusercontent.com/u/60521097/fedora-logo.png)|`dnf copr enable antergos/python3-whither`|
-|![openSUSE](https://dl.dropboxusercontent.com/u/60521097/Geeko-button-bling7.png)|[1 Click Install](https://software.opensuse.org/ymp/home:antergos/openSUSE_Leap_42.2/whither.ymp?base=openSUSE%3ALeap%3A42.1&query=python3-whither)|
-|![ubuntu](https://dl.dropboxusercontent.com/u/60521097/ubuntu_orange_hex.png)|[OBS Repo](https://software.opensuse.org/download.html?project=home:antergos&package=python3-whither)|
+|![antergos][antergos]|`sudo pacman -S python-whither`|
+|![arch][arch]        |`yaourt -S python-whither`|
+|![fedora][fedora]    |`dnf copr enable antergos/python3-whither`|
+|![openSUSE][openSUSE]|[1 Click Install](https://software.opensuse.org/ymp/home:antergos/openSUSE_Leap_42.2/whither.ymp?base=openSUSE%3ALeap%3A42.2&query=python3-whither)|
+|![ubuntu][ubuntu]    |[OBS Repo](https://software.opensuse.org/download.html?project=home:antergos&package=python3-whither)|
 
 ### From Source
 
 #### Dependencies
-|                       | ![antergos](https://dl.dropboxusercontent.com/u/60521097/logo-square26x26.png) &nbsp;&nbsp; ![arch](https://dl.dropboxusercontent.com/u/60521097/archlogo26x26.png) | ![debian](https://dl.dropboxusercontent.com/u/60521097/openlogo-nd-25.png) &nbsp;&nbsp; ![ubuntu](https://dl.dropboxusercontent.com/u/60521097/ubuntu_orange_hex.png) | ![fedora](https://dl.dropboxusercontent.com/u/60521097/fedora-logo.png) | ![openSUSE](https://dl.dropboxusercontent.com/u/60521097/Geeko-button-bling7.png) | 
-|-----------------------|-------------------------------------------------------------------------|----------------------------------------------------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-|**pyqt5**              |python-pyqt5  |python3-pyqt5         |python3-qt5          |python3-qt5           |
-|**qt5-webengine**      |qt5-webengine |libqt5webengine5      |qt5-qtwebengine      |libqt5-qtwebengine    |
+|                       | ![antergos][antergos] &nbsp;&nbsp; ![arch][arch] | ![ubuntu][ubuntu] | ![fedora][fedora] | ![openSUSE][openSUSE] | 
+|-----------------------|--------------------------------------------------|-------------------|-------------------|-----------------------|
+|**pyqt5**              |python-pyqt5                                      |python3-pyqt5      |python3-qt5        |python3-qt5            |
+|**qt5-webengine**      |qt5-webengine                                     |libqt5webengine5   |qt5-qtwebengine    |libqt5-qtwebengine     |
 
 > ***NOTE:*** These instructions are for the `master` branch. To build the latest release, please see the `stable` branch.
 
@@ -34,3 +34,8 @@ cd /tmp/whither
 sudo python setup.py install
 ```
 
+[antergos]: https://dl.dropboxusercontent.com/u/60521097/logo-square26x26.png "antergos"
+[arch]: https://dl.dropboxusercontent.com/u/60521097/archlogo26x26.png "arch"
+[fedora]: https://dl.dropboxusercontent.com/u/60521097/fedora-logo.png "fedora"
+[openSUSE]: https://dl.dropboxusercontent.com/u/60521097/Geeko-button-bling7.png "openSUSE"
+[ubuntu]: https://dl.dropboxusercontent.com/u/60521097/ubuntu_orange_hex.png "ubuntu"
