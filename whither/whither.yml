@@ -10,7 +10,6 @@ Example:
             enabled: True
             command: /usr/lib/at-spi2-core/at-spi-bus-launcher
             arg: --launch-immediately
-        allow_remote_urls: False
         # Unique identifier string (dbus-style)
         app_id: com.antergos.cnchi
         entry_point:
