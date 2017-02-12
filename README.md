@@ -1,5 +1,5 @@
 # whither
-[![PyPI](https://img.shields.io/pypi/v/whither.svg?style=flat-square)](https://pypi.python.org/pypi/whither) &nbsp;[![Codacy grade](https://img.shields.io/codacy/grade/140ddf3d48af4497bc691e4f957aa164.svg?style=flat-square)](https://www.codacy.com/app/Antergos/whither) &nbsp;[![Python Versions](https://img.shields.io/pypi/pyversions/whither.svg?style=flat-square)]()
+[![PyPI](https://img.shields.io/pypi/v/whither.svg?style=flat-square)](https://pypi.python.org/pypi/whither) &nbsp;[![Codacy grade][codacy]](https://www.codacy.com/app/Antergos/whither) &nbsp;[![Python Versions](https://img.shields.io/pypi/pyversions/whither.svg?style=flat-square)]()
 
 #### Universal Linux Application SDK - Create once. Run everywhere.
 ## Install It
@@ -39,3 +39,5 @@ sudo python setup.py install
 [fedora]: https://dl.dropboxusercontent.com/u/60521097/fedora-logo.png "fedora"
 [openSUSE]: https://dl.dropboxusercontent.com/u/60521097/Geeko-button-bling7.png "openSUSE"
 [ubuntu]: https://dl.dropboxusercontent.com/u/60521097/ubuntu_orange_hex.png "ubuntu"
+
+[codacy]: https://img.shields.io/codacy/grade/140ddf3d48af4497bc691e4f957aa164.svg?style=flat-square "Codacy Grade"
