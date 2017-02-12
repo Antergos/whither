@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='whither',
-    version='0.1.1',
+    version='0.2.0',
     packages=[
         'whither',
         'whither.base',
@@ -13,7 +13,7 @@ setup(
     ],
     url='https://github.com/antergos/whither',
     license='GPL-3.0',
-    author='Dustin Falgout',
+    author='Antergos Linux Project',
     author_email='dustin@antergos.com',
     description='Desktop application SDK for creating Universal Linux Applications.',
     install_requires=[
