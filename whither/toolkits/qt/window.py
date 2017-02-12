@@ -28,6 +28,7 @@
 """ Wrapper for QMainWindow """
 
 # Standard Lib
+from typing import Dict
 
 # 3rd-Party Libs
 from PyQt5.QtWidgets import (
@@ -36,13 +37,20 @@ from PyQt5.QtWidgets import (
     qApp,
     QWidget,
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import (
+    QEvent,
+    Qt,
+)
 from PyQt5.QtGui import QIcon
 
 # This Library
 from whither.base.objects import Window
 
-WINDOW_STATES = {
+# Typing Helpers
+QtWindowStatesT = Dict[str, Qt.WindowState]
+
+
+WINDOW_STATES: QtWindowStatesT = {
     'NORMAL': Qt.WindowNoState,
     'MINIMIZED': Qt.WindowMinimized,
     'MAXIMIZED': Qt.WindowMaximized,
@@ -118,6 +126,27 @@ class QtWindow(Window):
         about_menu = menu_bar.addMenu('&About')
         about_menu.addAction(exit_action)
 
+    def changeEvent(self, event: QEvent) -> None:
+        if event is not QEvent.WindowStateChange:
+            return
+
+        try:
+            new_window_state = self.widget.windowHandle().windowState()
+        except Exception:
+            new_window_state = self.widget.windowState()
+
+        if new_window_state & self.states['MAXIMIZED']:
+            self.state = self.states['MAXIMIZED']
+
+        elif new_window_state & self.states['FULLSCREEN']:
+            self.state = self.states['FULLSCREEN']
+
+        elif new_window_state & self.states['MINIMIZED']:
+            self.state = self.states['MINIMIZED']
+
+        else:
+            self.state = self.states['NORMAL']
+
     def show(self) -> None:
         self.widget.show()
 
@@ -139,7 +168,12 @@ class QtWindow(Window):
         except Exception:
             self.widget.showMinimized()
 
-    def set_state(self, state: int) -> None:
-        if state != self.state:
-            self.widget.setWindowState(state)
-            self.state = state
+    def set_state(self, new_state: Qt.WindowState) -> None:
+        if new_state == self.state:
+            return
+
+        try:
+            self.widget.windowHandle().setWindowState(new_state)
+        except Exception:
+            self.widget.setWindowState(new_state)
+
