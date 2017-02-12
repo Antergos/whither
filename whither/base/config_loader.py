@@ -26,7 +26,6 @@
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
 # Standard Lib
-import os
 import pkg_resources
 from typing import Callable
 
