@@ -78,6 +78,14 @@ class BaseObject:
         if name in _MAIN_COMPONENTS:
             self._register_main_component(name)
 
+    def __init_subclass__(cls, **kwargs) -> None:
+        super().__init_subclass__()
+        cls.__pre_init__()
+
+    @classmethod
+    def __pre_init__(cls):
+        pass
+
     def _register_main_component(self, name: str) -> None:
         attrib = getattr(self, name)
 

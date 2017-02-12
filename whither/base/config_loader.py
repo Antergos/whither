@@ -29,32 +29,46 @@
 # Standard Lib
 import os
 import pkg_resources
+from typing import Callable
 
 # 3rd Party Libs
 import ruamel.yaml as yaml
 
 
 class ConfigLoader:
+    _filters = []
 
     def __init__(self, key: str, path: str = None) -> None:
-        self.load_from = path if path else '__main__'
+        self.load_from = path
         self.config = self.load_config(key)
 
+    def _filter_data(self, key: str, data: str) -> str:
+        if not self._filters:
+            return data
+
+        for callback in self._filters:
+            data = callback(key, data)
+
+        return data
+
+    @classmethod
+    def add_filter(cls, callback: Callable[[str, str], None]) -> None:
+        cls._filters.append(callback)
+
     def load_config(self, key: str) -> dict:
-        if os.path.isabs(self.load_from) and os.path.exists(self.load_from):
-            data = open(self.load_from).read()
+        try:
+            data = pkg_resources.resource_string(self.load_from, 'whither.yml').decode('utf-8')
+            data = self._filter_data(key, data)
+            config = yaml.safe_load(data)
+            config = config[key]
+        except Exception:
+            data = open(self.load_from, 'r').read()
+            data = self._filter_data(key, data)
             config = yaml.safe_load(data)
             config = config[key]
 
-        else:
-
-            try:
-                data = pkg_resources.resource_string(self.load_from, 'whither.yml')
-                config = yaml.safe_load(data)
-                config = config[key]
-            except Exception:
-                data = pkg_resources.resource_string(__file__, 'whither.yml')
-                config = yaml.safe_load(data)
-                config = config[key]
-
         return {key: value for key, value in config.items()}
+
+    @classmethod
+    def remove_filter(cls, callback: Callable[[str, str], None]) -> None:
+        cls._filters.remove(callback)

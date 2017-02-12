@@ -41,8 +41,7 @@ class App(Application):
     def __init__(self, app_name, bridge_objects: BridgeObjects = None, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        super().__setattr__('config', ConfigLoader(app_name).config['app'])
-        super().__setattr__('_config', ConfigLoader(app_name).config['whither'])
+        self._wh_load_config(app_name)
 
         self._before_main_window_init()
         Window('_main_window')
@@ -51,6 +50,14 @@ class App(Application):
         WebContainer(bridge_objects=bridge_objects)
 
         self._main_window.show()
+
+    def _wh_load_config(self, key: str) -> None:
+        try:
+            setattr(self, 'config', ConfigLoader(key, '__main__').config['app'])
+            setattr(self, '_config', ConfigLoader(key, '__main__').config['whither'])
+        except Exception as err:
+            setattr(self, 'config', ConfigLoader(key, __file__).config['app'])
+            setattr(self, '_config', ConfigLoader(key, __file__).config['whither'])
 
     def _before_web_container_init(self):
         pass
