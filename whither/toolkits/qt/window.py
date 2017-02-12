@@ -61,9 +61,7 @@ class QtWindow(Window):
         self._initialize()
 
     def _initialize(self) -> None:
-        config = self._config.window
-        toolbar_config = self._config.toolbar
-        initial_state = config.initial_state.upper()
+        config, toolbar_config, initial_state = super()._initialize()
 
         if not self._app.windows:
             self.widget = QMainWindow()
@@ -84,7 +82,7 @@ class QtWindow(Window):
             self.widget.setFixedSize(config.width, config.height)
 
         if config.decorated and toolbar_config.enabled:
-            self.init_menu_bar()
+            self._init_menu_bar()
 
         elif not config.decorated:
             self.widget.setWindowFlags(self.widget.windowFlags() | Qt.FramelessWindowHint)
@@ -100,7 +98,7 @@ class QtWindow(Window):
 
         self.set_state(self.states[initial_state])
 
-    def init_menu_bar(self) -> None:
+    def _init_menu_bar(self) -> None:
         exit_action = QAction(QIcon('exit.png'), '&Exit', self)
         exit_action.setShortcut('Ctrl+Q')
         exit_action.setStatusTip('Exit application')

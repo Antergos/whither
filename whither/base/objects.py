@@ -132,8 +132,12 @@ class Window(BaseObject):
 
         self.state: int = 0
 
-    def _initialize(self) -> None:
-        raise NotImplementedError()
+    def _initialize(self) -> tuple:
+        config = self._config.window
+        toolbar_config = self._config.toolbar
+        initial_state = config.initial_state.upper()
+
+        return config, toolbar_config, initial_state
 
     def show(self) -> None:
         raise NotImplementedError()
