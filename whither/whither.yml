@@ -5,6 +5,12 @@ Example:
     # Whither's Config
     whither:
         allow_remote_urls: False
+        # Accessibility Service Daemon
+        at_spi_service:
+            enabled: True
+            command: /usr/lib/at-spi2-core/at-spi-bus-launcher
+            arg: --launch-immediately
+        allow_remote_urls: False
         # Unique identifier string (dbus-style)
         app_id: com.antergos.cnchi
         entry_point:

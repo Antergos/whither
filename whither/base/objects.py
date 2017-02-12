@@ -90,7 +90,6 @@ class BaseObject:
         attrib = getattr(self, name)
 
         if attrib is None:
-            print(f'Storing main component: {name}')
             setattr(self, name, self)
 
 
