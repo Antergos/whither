@@ -50,12 +50,12 @@ from whither.base.objects import Window
 QtWindowStatesT = Dict[str, Qt.WindowState]
 
 
-WINDOW_STATES: QtWindowStatesT = {
+WINDOW_STATES = {
     'NORMAL': Qt.WindowNoState,
     'MINIMIZED': Qt.WindowMinimized,
     'MAXIMIZED': Qt.WindowMaximized,
     'FULLSCREEN': Qt.WindowFullScreen,
-}
+}  # type: QtWindowStatesT
 
 
 class QtWindow(Window):
