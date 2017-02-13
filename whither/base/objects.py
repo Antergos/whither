@@ -71,8 +71,8 @@ class BaseObject:
     windows = SharedData()         # type: ClassVar[list]
 
     def __init__(self, name: str, *args, **kwargs) -> None:
-        self.widget: Widget = None
-        self.name: str = name
+        self.widget = None  # type: Widget
+        self.name = name    # type: str
 
         if name in _MAIN_COMPONENTS:
             self._register_main_component(name)
@@ -130,7 +130,7 @@ class Window(BaseObject):
     def __init__(self, name: str, *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
-        self.state: int = 0
+        self.state = 0  # type: int
 
     def _initialize(self) -> tuple:
         config = self._config.window
