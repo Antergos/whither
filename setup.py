@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='whither',
-    version='0.2.4',
+    version='0.2.5',
     packages=[
         'whither',
         'whither.base',
