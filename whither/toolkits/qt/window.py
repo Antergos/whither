@@ -73,8 +73,12 @@ class QtWindow(Window):
 
         if not self._app.windows:
             self.widget = QMainWindow()
+            this_window = 'Main Window'
         else:
             self.widget = QWidget()
+            this_window = 'Window'
+
+        self.logger.debug('Initializing %s', this_window)
 
         self._app.windows.append(self.widget)
 

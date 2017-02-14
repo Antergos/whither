@@ -28,6 +28,12 @@
 """ Bases Classes (for future flexibility) """
 
 # Standard Lib
+from logging import (
+    getLogger,
+    DEBUG,
+    Formatter,
+    StreamHandler,
+)
 from typing import (
     ClassVar,
     Tuple,
@@ -61,18 +67,18 @@ _MAIN_COMPONENTS = (
 class BaseObject:
     _app = SharedData()            # type: ClassVar[Type['Application']]
     _config = SharedData()         # type: ClassVar[Type[AttributeDict]]
-    _logger = SharedData()         # type: ClassVar[Type['Logger']]
     _main_window = SharedData()    # type: ClassVar[Type['Window']]
     _web_container = SharedData()  # type: ClassVar[Type['WebContainer']]
 
     config = SharedData()          # type: ClassVar[Type[AttributeDict]]
     is_gtk = None                  # type: ClassVar[bool]
     is_qt = None                   # type: ClassVar[bool]
+    logger = SharedData()          # type: ClassVar[Type['Logger']]
     windows = SharedData()         # type: ClassVar[list]
 
     def __init__(self, name: str, *args, **kwargs) -> None:
-        self.widget = None  # type: Widget
         self.name = name    # type: str
+        self.widget = None  # type: Widget
 
         if name in _MAIN_COMPONENTS:
             self._register_main_component(name)
@@ -90,6 +96,22 @@ class BaseObject:
 
         if attrib is None:
             setattr(self, name, self)
+
+    def _setup_logger(self, name: str):
+        log_format = ''.join([
+            '%(asctime)s [ %(levelname)s ] %(module)s - %(filename)s:%(',
+            'lineno)d : %(funcName)s | %(message)s'
+        ])
+
+        formatter = Formatter(fmt=log_format, datefmt="%Y-%m-%d %H:%M:%S")
+        stream_handler = StreamHandler()
+        self.logger = getLogger()
+
+        stream_handler.setLevel(DEBUG)
+        stream_handler.setFormatter(formatter)
+        self.logger.setLevel(DEBUG)
+        self.logger.addHandler(stream_handler)
+        self.logger.debug('Logger is ready.')
 
 
 class Application(BaseObject):

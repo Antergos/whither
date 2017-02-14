@@ -42,6 +42,9 @@ class App(Application):
     def __init__(self, app_name, bridge_objects: BridgeObjects = None, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
+        if not self.logger:
+            self._setup_logger(app_name)
+
         self._wh_load_config(app_name)
         self._maybe_start_accessibility_service()
 
@@ -57,10 +60,13 @@ class App(Application):
         if not self._config.at_spi_service.enabled:
             return
 
-        if os.path.exists(self._config.at_spi_service.command):
-            subprocess.run([self._config.at_spi_service.command, self._config.at_spi_service.arg])
+        if not os.path.exists(self._config.at_spi_service.command):
+            return
+
+        subprocess.run([self._config.at_spi_service.command, self._config.at_spi_service.arg])
 
     def _wh_load_config(self, key: str) -> None:
+        self.logger.debug('Try load config using key: %s', key)
         try:
             setattr(self, 'config', ConfigLoader(key, '__main__').config['app'])
             setattr(self, '_config', ConfigLoader(key, '__main__').config['whither'])
