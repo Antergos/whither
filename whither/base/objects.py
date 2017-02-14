@@ -94,7 +94,7 @@ class BaseObject:
 
 class Application(BaseObject):
 
-    windows: ClassVar[list] = []
+    windows = []  # type: ClassVar[list]
 
     def __init__(self, name: str, *args, **kwargs) -> None:
         global _APP_INSTANCE
