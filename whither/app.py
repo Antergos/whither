@@ -28,8 +28,6 @@
 """ The primary entry point to the library. """
 
 # Standard Lib
-import os
-import subprocess
 
 # This Library
 from .toolkits.bootstrap import Application, Window, WebContainer
@@ -46,7 +44,6 @@ class App(Application):
             self._setup_logger(app_name)
 
         self._wh_load_config(app_name)
-        self._maybe_start_accessibility_service()
 
         self._before_main_window_init()
         Window('_main_window')
@@ -55,15 +52,6 @@ class App(Application):
         WebContainer(bridge_objects=bridge_objects)
 
         self._main_window.show()
-
-    def _maybe_start_accessibility_service(self):
-        if not self._config.at_spi_service.enabled:
-            return
-
-        if not os.path.exists(self._config.at_spi_service.command):
-            return
-
-        subprocess.run([self._config.at_spi_service.command, self._config.at_spi_service.arg])
 
     def _wh_load_config(self, key: str) -> None:
         self.logger.debug('Try load config using key: %s', key)

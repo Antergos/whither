@@ -28,6 +28,8 @@
 """ Bases Classes (for future flexibility) """
 
 # Standard Lib
+import os
+import subprocess
 from logging import (
     getLogger,
     DEBUG,
@@ -127,7 +129,17 @@ class Application(BaseObject):
 
         super().__init__(name=name, *args, **kwargs)
 
+    def _maybe_start_accessibility_service(self):
+        if not self._config.at_spi_service.enabled:
+            return
+
+        if not os.path.exists(self._config.at_spi_service.command):
+            return
+
+        subprocess.run([self._config.at_spi_service.command, self._config.at_spi_service.arg])
+
     def run(self) -> int:
+        self._maybe_start_accessibility_service()
         raise NotImplementedError()
 
 
