@@ -30,6 +30,7 @@
 # Standard Lib
 import os
 import subprocess
+import sys
 from logging import (
     getLogger,
     DEBUG,
@@ -44,6 +45,7 @@ from typing import (
 )
 
 # This Lib
+from .metaclasses import PEP487Shim
 from .data import (
     AttributeDict,
     SharedData,
@@ -65,8 +67,12 @@ _MAIN_COMPONENTS = (
     'config',
 )
 
+HAS_PYTHON_3_6 = sys.version_info.minor > 5
 
-class BaseObject:
+MCS = type if HAS_PYTHON_3_6 else PEP487Shim
+
+
+class BaseObject(metaclass=MCS):
     _app = SharedData()            # type: ClassVar[Type['Application']]
     _config = SharedData()         # type: ClassVar[Type[AttributeDict]]
     _main_window = SharedData()    # type: ClassVar[Type['Window']]
@@ -86,7 +92,9 @@ class BaseObject:
             self._register_main_component(name)
 
     def __init_subclass__(cls, **kwargs) -> None:
-        super().__init_subclass__()
+        if HAS_PYTHON_3_6:
+            super().__init_subclass__()
+
         cls.__pre_init__()
 
     @classmethod
