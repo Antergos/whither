@@ -85,6 +85,12 @@ class GtkWindow(Window):
         if config.stays_on_top:
             self.widget.set_keep_above(True)
 
+        # Set the cursor for the root window to prevent ugly default X cursor from being shown.
+        root_window = Gdk.get_default_root_window()
+        default_display = Gdk.Display.get_default_display()
+        cursor = Gdk.Cursor.new_for_display(default_display, Gdk.CursorType.LEFT_PTR)
+        root_window.set_cursor(cursor)
+
         self.set_state(self.states[initial_state])
 
     def _init_menu_bar(self) -> None:

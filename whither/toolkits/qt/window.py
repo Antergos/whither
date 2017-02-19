@@ -108,6 +108,7 @@ class QtWindow(Window):
             self.widget.windowFlags() | Qt.MaximizeUsingFullscreenGeometryHint
         )
 
+        self.widget.setCursor(Qt.ArrowCursor)
         self.set_state(self.states[initial_state])
 
     def _init_menu_bar(self) -> None:
