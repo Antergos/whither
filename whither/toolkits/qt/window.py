@@ -108,7 +108,9 @@ class QtWindow(Window):
             self.widget.windowFlags() | Qt.MaximizeUsingFullscreenGeometryHint
         )
 
+        # Set the cursor for the root window to prevent ugly default X cursor from being shown.
         self.widget.setCursor(Qt.ArrowCursor)
+
         self.set_state(self.states[initial_state])
 
     def _init_menu_bar(self) -> None:

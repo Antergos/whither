@@ -41,6 +41,7 @@ from PyQt5.QtWebEngineWidgets import (
     QWebEngineScript,
 )
 from PyQt5.QtCore import (
+    Qt,
     QUrl,
     QFile,
 )
@@ -86,6 +87,9 @@ class QtWebContainer(WebContainer):
 
         if self._config.debug_mode:
             self.devtools = DevTools()
+
+        if not self._config.context_menu.enabled:
+            self.view.setContextMenuPolicy(Qt.PreventContextMenu)
 
         if self._config.entry_point.autoload:
             self.initialize_bridge_objects()

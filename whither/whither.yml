@@ -12,6 +12,8 @@ Example:
             arg: --launch-immediately
         # Unique identifier string (dbus-style)
         app_id: com.antergos.cnchi
+        context_menu:
+            enabled: False
         entry_point:
             autoload: True
             # A valid URI for an HTML page that will be loaded when the app starts.
