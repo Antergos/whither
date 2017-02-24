@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='whither',
-    version='0.3.0',
+    version='0.3.1',
     packages=[
         'whither',
         'whither.base',
@@ -24,12 +24,13 @@ setup(
         '': ['whither.yml'],
     },
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: X11 Applications',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: JavaScript',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Topic :: Software Development',
