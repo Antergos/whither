@@ -25,10 +25,9 @@
 # You should have received a copy of the GNU General Public License
 # along with whither; If not, see <http://www.gnu.org/licenses/>.
 
-""" Wrapper for QMainWindow """
+""" Request Interceptor """
 
 # 3rd-Party Libs
-from PyQt5.QtCore import QObject
 from PyQt5.QtWebEngineCore import (
     QWebEngineUrlRequestInterceptor,
     QWebEngineUrlRequestInfo,
@@ -38,7 +37,17 @@ from PyQt5.QtWebEngineCore import (
 class QtUrlRequestInterceptor(QWebEngineUrlRequestInterceptor):
 
     def intercept_request(self, info: QWebEngineUrlRequestInfo) -> None:
-        pass
+        url = info.requestUrl().toString()
+        not_data_uri = 'data' != info.requestUrl().scheme()
+        not_local_file = not info.requestUrl().isLocalFile()
+
+        not_devtools = (
+            not url.startswith('http://127.0.0.1') and not url.startswith('ws://127.0.0.1')
+        )
+
+        block_request = not_devtools and not_data_uri and not_local_file
+
+        info.block(block_request)
 
     def interceptRequest(self, info: QWebEngineUrlRequestInfo) -> None:
         self.intercept_request(info)

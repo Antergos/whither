@@ -46,16 +46,13 @@ from PyQt5.QtGui import QIcon
 # This Library
 from whither.base.objects import Window
 
-# Typing Helpers
-QtWindowStatesT = Dict[str, Qt.WindowState]
-
 
 WINDOW_STATES = {
     'NORMAL': Qt.WindowNoState,
     'MINIMIZED': Qt.WindowMinimized,
     'MAXIMIZED': Qt.WindowMaximized,
     'FULLSCREEN': Qt.WindowFullScreen,
-}  # type: QtWindowStatesT
+}  # type: Dict[str, Qt.WindowState]
 
 
 class QtWindow(Window):
@@ -63,7 +60,7 @@ class QtWindow(Window):
     def __init__(self, name: str = '_window', *args, **kwargs) -> None:
         super().__init__(name=name, *args, **kwargs)
 
-        self.states = WINDOW_STATES  # type: dict
+        self.states = WINDOW_STATES  # type: Dict[str, Qt.WindowState]
         self.widget = None           # type: QWidget
 
         self._initialize()

@@ -67,6 +67,14 @@ class ConfigLoader:
 
         return {key: value for key, value in config.items()}
 
+    def load_default_config(self) -> dict:
+        load_from_orig = self.load_from
+        self.load_from = __file__
+        default_config = self.load_config('Example')
+        self.load_from = load_from_orig
+
+        return default_config
+
     @classmethod
     def remove_filter(cls, callback: Callable[[str, str], None]) -> None:
         cls._filters.remove(callback)

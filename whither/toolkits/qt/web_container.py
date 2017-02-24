@@ -39,6 +39,7 @@ from PyQt5.QtWebEngineWidgets import (
     QWebEngineView,
     QWebEngineSettings,
     QWebEngineScript,
+    QWebEngineProfile,
 )
 from PyQt5.QtCore import (
     Qt,
@@ -49,6 +50,8 @@ from PyQt5.QtCore import (
 # This Library
 from whither.base.objects import WebContainer
 from .devtools import DevTools
+from .interceptor import QtUrlRequestInterceptor
+
 
 # Typing Helpers
 BridgeObjects = Tuple['BridgeObject']
@@ -78,8 +81,12 @@ class QtWebContainer(WebContainer):
         if self._config.debug_mode:
             os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = '12345'
 
+        self.profile = QWebEngineProfile.defaultProfile()
+        self.interceptor = QtUrlRequestInterceptor()
+
         self.view = QWebEngineView(parent=self._main_window.widget)
         self.page = self.view.page()
+
         self.channel = QWebChannel(self.page)
         self.bridge_initialized = False
 
@@ -90,6 +97,9 @@ class QtWebContainer(WebContainer):
 
         if not self._config.context_menu.enabled:
             self.view.setContextMenuPolicy(Qt.PreventContextMenu)
+
+        if not self._config.allow_remote_urls:
+            self.profile.setRequestInterceptor(self.interceptor)
 
         if self._config.entry_point.autoload:
             self.initialize_bridge_objects()

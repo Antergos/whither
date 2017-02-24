@@ -148,7 +148,7 @@ class Application(BaseObject):
 
     def run(self) -> int:
         self._maybe_start_accessibility_service()
-        raise NotImplementedError()
+        return 0
 
 
 class WebContainer(BaseObject):

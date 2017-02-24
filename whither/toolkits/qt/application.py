@@ -53,6 +53,8 @@ class QtApplication(Application):
         self._main_window.widget.setGeometry(self.desktop.availableGeometry())
 
     def run(self) -> int:
+        super().run()
+
         self.logger.debug('Setting window size and position')
         self._set_window_size_position()
 
