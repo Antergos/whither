@@ -144,7 +144,7 @@ class Application(BaseObject):
         if not os.path.exists(self._config.at_spi_service.command):
             return
 
-        subprocess.run([self._config.at_spi_service.command, self._config.at_spi_service.arg])
+        subprocess.call([self._config.at_spi_service.command, self._config.at_spi_service.arg])
 
     def run(self) -> int:
         self._maybe_start_accessibility_service()
