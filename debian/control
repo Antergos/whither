@@ -1,0 +1,16 @@
+Source: whither
+Section: python
+Priority: optional
+Maintainer: Antergos <dev@antergos.com>
+Uploaders: Dustin Falgout <dustin@antergos.com>
+Build-Depends: debhelper (>= 9), libqt5webengine5, python3-pyqt5
+Standards-Version: 3.9.6
+Homepage: https://github.com/antergos/web-greeter
+
+Package: python3-whither
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Universal Linux Application SDK - Create once. Run everywhere.
+	Whither allows developers to create universal desktop applications that can run under Qt5
+	or Gtk3. A common api is provided so developers need not worry about implementation details
+	of the GUI toolkits.
