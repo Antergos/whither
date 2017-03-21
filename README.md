@@ -35,10 +35,10 @@ cd /tmp/whither
 sudo python setup.py install
 ```
 
-[antergos]: https://dl.dropboxusercontent.com/u/60521097/logo-square26x26.png "antergos"
-[arch]: https://dl.dropboxusercontent.com/u/60521097/archlogo26x26.png "arch"
-[fedora]: https://dl.dropboxusercontent.com/u/60521097/fedora-logo.png "fedora"
-[openSUSE]: https://dl.dropboxusercontent.com/u/60521097/Geeko-button-bling7.png "openSUSE"
-[ubuntu]: https://dl.dropboxusercontent.com/u/60521097/ubuntu_orange_hex.png "ubuntu"
+[antergos]: https://www.dropbox.com/s/tju7maccr328w87/logo-square26x26.png?dl=1 "antergos"
+[arch]: https://www.dropbox.com/s/q8ypd345cqcd0b5/archlogo26x26.png?dl=1 "arch"
+[fedora]: https://www.dropbox.com/s/b8q448vuwopb0cl/fedora-logo.png?dl=1 "fedora"
+[openSUSE]: https://www.dropbox.com/s/jhirpw85ztgl59h/Geeko-button-bling7.png?dl=1 "openSUSE"
+[ubuntu]: https://www.dropbox.com/s/nev98nld2u1qbgl/ubuntu_orange_hex.png?dl=1 "ubuntu"
 
 [codacy]: https://img.shields.io/codacy/grade/140ddf3d48af4497bc691e4f957aa164.svg?style=flat-square "Codacy Grade"
