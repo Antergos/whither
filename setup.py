@@ -18,7 +18,7 @@ setup(
     description='Desktop application SDK for creating Universal Linux Applications.',
     install_requires=[
         'PyQt5',
-        'ruamel.yaml',
+        'ruamel.yaml<0.15',
     ],
     package_data={
         '': ['whither.yml'],
