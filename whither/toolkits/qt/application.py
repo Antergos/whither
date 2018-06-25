@@ -27,6 +27,9 @@
 
 """ Wrapper for QMainWindow """
 
+# Standard Lib
+import sys
+
 # 3rd-Party Libs
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
@@ -40,7 +43,7 @@ class QtApplication(Application):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(name='_app', *args, **kwargs)
 
-        self.widget = QApplication([])
+        self.widget = QApplication(sys.argv)
         self.is_qt, self.is_gtk = True, False
         self.desktop = self.widget.desktop()
 

@@ -51,6 +51,7 @@ from PyQt5.QtCore import (
 from whither.base.objects import WebContainer
 from .devtools import DevTools
 from .interceptor import QtUrlRequestInterceptor
+from .url_scheme import QtUrlSchemeHandler
 
 
 # Typing Helpers
@@ -65,11 +66,12 @@ DISABLED_SETTINGS = [
 ]
 
 ENABLED_SETTINGS = [
-    'FocusOnNavigationEnabled',  # Qt 5.8+
-    'FullScreenSupportEnabled',  # Qt 5.6+
+    'FocusOnNavigationEnabled',      # Qt 5.8+
+    'FullScreenSupportEnabled',      # Qt 5.6+
     'LocalContentCanAccessFileUrls',
-    'ScreenCaptureEnabled',      # Qt 5.7+
+    'ScreenCaptureEnabled',          # Qt 5.7+
     'ScrollAnimatorEnabled',
+    'FocusOnNavigationEnabled',      # Qt 5.11+
 ]
 
 
@@ -83,12 +85,15 @@ class QtWebContainer(WebContainer):
 
         self.profile = QWebEngineProfile.defaultProfile()
         self.interceptor = QtUrlRequestInterceptor()
+        self.url_scheme_handler = QtUrlSchemeHandler()
 
         self.view = QWebEngineView(parent=self._main_window.widget)
         self.page = self.view.page()
 
         self.channel = QWebChannel(self.page)
         self.bridge_initialized = False
+
+        self.profile.installUrlSchemeHandler(b'web-greeter', self.url_scheme_handler)
 
         self._initialize_page(self.page)
 
@@ -172,7 +177,7 @@ class QtWebContainer(WebContainer):
             return
 
         if not url.startswith('file'):
-            url = 'file://{0}'.format(url)
+            url = 'web-greeter:/{0}'.format(url)
 
         self.page.load(QUrl(url))
 

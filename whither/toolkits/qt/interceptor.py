@@ -47,7 +47,7 @@ class QtUrlRequestInterceptor(QWebEngineUrlRequestInterceptor):
 
         block_request = not_devtools and not_data_uri and not_local_file
 
-        info.block(block_request)
+        #info.block(block_request)
 
     def interceptRequest(self, info: QWebEngineUrlRequestInfo) -> None:
         self.intercept_request(info)
